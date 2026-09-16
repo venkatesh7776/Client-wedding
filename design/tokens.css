@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Wedding — Design Tokens
+   Source: Figma "Wedding" / Page 4 (node 73:189)
+   The Figma file defines no Variables, so these are lifted from raw styles.
+   ========================================================================== */
+
+:root {
+  /* ---------- Color ---------- */
+
+  /* Brand / ink */
+  --color-ink:            #274968; /* deep navy — all hero copy, icons */
+  --color-ink-shadow:     #8ec1eb; /* pale blue offset shadow behind names */
+
+  /* Sky gradient overlay on the hero background image */
+  --color-sky-top:        #d8e9f8;
+  --color-sky-bottom:     #c2d6e8; /* used at alpha 0 */
+  --color-sky-bottom-a0:  rgba(194, 214, 232, 0);
+
+  /* Surfaces */
+  --color-surface:        #ffffff;
+  --color-on-dark:        #ffffff; /* loader verse */
+  --color-loader-ring:    #7f7f7f; /* 4.321px ring around loader portrait */
+
+  /* Gradients */
+  --gradient-sky: linear-gradient(
+    to bottom,
+    var(--color-sky-top) 33.269%,
+    var(--color-sky-bottom-a0) 100%
+  );
+
+  /* ---------- Typography ---------- */
+
+  /* Families */
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-arabic:  "Arbutus", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --font-ui:      "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+
+  /* Sizes */
+  --font-size-name:     68px;   /* Sahla Abdulla / Abdul Basith T.A */
+  --font-size-verse:    53.31px;/* loader: وَخَلَقْنَاكُمْ أَزْوَاجًا */
+  --font-size-amp:      49px;   /* & */
+  --font-size-bismillah:24px;   /* بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ */
+  --font-size-meta:     20px;   /* date + location */
+
+  /* Line heights */
+  --line-height-name:      58px;
+  --line-height-bismillah: 72px;
+  --line-height-normal:    normal;
+
+  /* Letter spacing (Figma: 1% of font size on the serif styles) */
+  --tracking-name:  0.68px;
+  --tracking-verse: 0.5331px;
+  --tracking-amp:   0.49px;
+
+  /* Variable-font axes */
+  --fvs-ui:     "opsz" 14, "wdth" 100; /* Bricolage Grotesque */
+  --fvs-arabic: "wdth" 100;            /* Arbutus */
+
+  /* Effects */
+  --text-shadow-name: 1.5px 1.5px 0 var(--color-ink-shadow);
+
+  /* ---------- Layout ---------- */
+  --canvas-width:      1440px;
+  --hero-height:       780px;
+  --loader-height:     816px;
+  --stack-gap-block:   24px; /* Bismillah → names block */
+  --stack-gap-names:   22px; /* between name lines */
+  --gap-amp-rule:      17px; /* rule ↔ & ↔ rule */
+  --gap-meta-icon:     5px;  /* icon ↔ label */
+  --gap-meta-items:    54px; /* date block ↔ location block */
+  --icon-size:         24px;
+}

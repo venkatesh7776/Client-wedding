@@ -1,0 +1,404 @@
+/* ==========================================================================
+   SECTION 2 — MEET THE BRIDE & GROOM
+   Same visual world as the hero, one step further in: the courtyard gives way
+   to a quiet palace gallery. Stone, gold and foliage tones are sampled from
+   the hero's own art (Pillar.png / lamp.png / hero-background.png).
+   ========================================================================== */
+
+:root {
+  --color-ivory: #f7efdf;         /* gallery wall */
+  --color-stone-light: #f1e4c4;   /* lit stone face */
+  --color-stone: #ead9b0;         /* Pillar.png — light stone */
+  --color-stone-mid: #c09e78;     /* Pillar.png — mid stone */
+  --color-stone-shadow: #a4865c;  /* Pillar.png — stone in shade */
+  --color-floor: #d2ad8e;         /* hero-background.png — bottom edge */
+  --color-gold: #b08d57;          /* lamp.png brass, muted toward stone */
+  --color-gold-deep: #7f5d2b;     /* gold for text — holds contrast on ivory */
+}
+
+.meet {
+  position: relative;
+  z-index: 1; /* over the hero's edge for the seam fade, still under the loader (z 2) */
+  isolation: isolate;
+  overflow: clip;
+  overflow-clip-margin: 200px;
+  padding: clamp(48px, 5vw, 72px) clamp(20px, 5vw, 64px) clamp(110px, 12vw, 176px);
+  background: var(--color-ivory);
+  color: var(--color-ink);
+}
+
+/* ---------- Backdrop: warm threshold from the hero floor, then the gallery ---------- */
+
+.meet__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    /* light through the arches */
+    radial-gradient(60% 34% at 50% 38%, rgba(216, 233, 248, 0.75), transparent 70%),
+    /* the courtyard floor carries over the threshold */
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-floor) 55%, var(--color-ivory)) 0,
+      var(--color-stone-light) 180px,
+      var(--color-ivory) 520px
+    );
+}
+
+/* Low-opacity khatam lattice, strongest behind the couple, gone at the edges. */
+.meet__lattice {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23a4865c' stroke-width='1'%3E%3Cpath d='M36 8l8.2 19.8L64 36l-19.8 8.2L36 64l-8.2-19.8L8 36l19.8-8.2z'/%3E%3Cpath d='M16.2 16.2h39.6v39.6H16.2z'/%3E%3Cpath d='M36 0v8M36 64v8M0 36h8M64 36h8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+  background-position: center top;
+  opacity: 0.09;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 45%, #000 20%, transparent 80%);
+  mask-image: radial-gradient(70% 60% at 50% 45%, #000 20%, transparent 80%);
+}
+
+/* The hero photograph ends on a hard edge. This layer reaches up over it and
+   lets the courtyard floor dissolve into the gallery stone — but only once the
+   visitor starts scrolling (opacity is scrubbed from 0), so the hero itself is
+   never altered at rest. */
+.meet__seam {
+  position: absolute;
+  inset: auto 0 100%;
+  height: clamp(110px, 15vw, 200px);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--color-floor) 55%, var(--color-ivory))
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Heading ---------- */
+
+.meet__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 760px;
+  margin: clamp(24px, 3vw, 44px) auto 0;
+}
+
+.meet__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(40px, 5.4vw, 72px);
+  line-height: 1.04;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  text-shadow: 1.5px 1.5px 0 var(--color-ink-shadow);
+}
+
+.meet__lede {
+  margin: clamp(14px, 1.6vw, 20px) 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(15px, 1.35vw, 19px);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+}
+
+/* ---------- Ornament: the hero's rule — & — rule, with a star ---------- */
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--color-gold);
+}
+
+.ornament__rule {
+  width: clamp(64px, 9vw, 120px);
+  height: 2px;
+}
+.ornament__rule--left { transform-origin: 100% 50%; }
+.ornament__rule--right { transform-origin: 0% 50%; }
+
+.ornament__star { display: block; }
+.ornament__star svg { display: block; width: 14px; height: 14px; }
+
+.meet__ornament { margin-top: clamp(22px, 2.6vw, 34px); }
+
+/* ---------- Bride · centre · Groom ---------- */
+
+.meet__couple {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: clamp(20px, 4vw, 72px);
+  max-width: 1120px;
+  margin: clamp(64px, 7vw, 104px) auto 0;
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.arch {
+  position: relative;
+  width: min(100%, 360px);
+  will-change: clip-path, transform;
+}
+
+.arch__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.arch__placeholder {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  fill: var(--color-ink);
+  fill-opacity: 0.5;
+}
+
+.person__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(26px, 3vw, 40px);
+}
+
+.person__role {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+.person__name {
+  margin: 10px 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(38px, 4.3vw, 58px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  text-shadow: 1.5px 1.5px 0 var(--color-ink-shadow);
+  white-space: nowrap;
+}
+
+.person__relation {
+  margin: clamp(16px, 1.8vw, 22px) 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(17px, 1.5vw, 20px);
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--color-ink) 72%, transparent);
+}
+
+/* Both parents on one line, joined by the gold ampersand. Each name stays
+   whole; if a narrow column can't fit the pair, it breaks at the "&". */
+.person__parents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 0.45em;
+  margin: 8px 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+
+.person__parents > span { white-space: nowrap; }
+
+.person__amp {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3em;
+  line-height: 1.1;
+  color: var(--color-gold-deep);
+}
+
+/* Centre: a quiet medallion — eight-point star holding a crescent. */
+.meet__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  color: var(--color-gold);
+}
+
+.meet__medallion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.meet__medallion svg { display: block; }
+
+.meet__centerRule {
+  width: 1px;
+  height: clamp(60px, 9vw, 120px);
+  margin: 14px 0;
+  background: linear-gradient(to bottom, transparent, var(--color-gold));
+  opacity: 0.7;
+}
+.meet__centerRule:last-of-type { background: linear-gradient(to bottom, var(--color-gold), transparent); }
+
+.meet__centerOrnament { display: none; }
+
+/* ---------- Their Families ---------- */
+
+.families {
+  max-width: 880px;
+  margin: clamp(84px, 9vw, 124px) auto 0;
+}
+
+.families__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.families__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(32px, 3.4vw, 46px);
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+
+.families__ornament { margin-top: 18px; }
+
+.families__cols {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: clamp(32px, 6vw, 96px);
+  margin-top: clamp(36px, 4vw, 52px);
+}
+
+/* hairline between the two families */
+.families__cols::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--color-gold) 30%, var(--color-gold) 70%, transparent);
+  opacity: 0.55;
+}
+
+.family { text-align: center; }
+
+.family__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 2vw, 27px);
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.family__list {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.family__member {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.family__name {
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(15px, 1.3vw, 17px);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.family__spouse {
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(13px, 1.1vw, 14.5px);
+  color: color-mix(in srgb, var(--color-ink) 64%, transparent);
+}
+
+/* ---------- Tablet: keep two columns, shrink the arches and names ---------- */
+
+@media (max-width: 1000px) {
+  .person__name { font-size: clamp(30px, 4.2vw, 42px); }
+}
+
+/* ---------- Mobile: bride, divider, groom, families ---------- */
+
+@media (max-width: 699px) {
+  .meet__couple {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+    margin-top: 64px;
+  }
+
+  .arch { width: min(82vw, 340px); }
+
+  .person__name {
+    font-size: clamp(36px, 10.4vw, 48px);
+    white-space: normal;
+  }
+
+  .person__parents { font-size: clamp(12.5px, 3.6vw, 16px); }
+
+  .meet__center {
+    align-self: auto;
+    padding: 56px 0 60px;
+  }
+  .meet__centerRule,
+  .meet__medallion { display: none; }
+  .meet__centerOrnament { display: flex; }
+
+  .families { margin-top: 96px; }
+
+  .families__cols {
+    grid-template-columns: 1fr;
+    row-gap: 44px;
+  }
+  .families__cols::before { display: none; }
+
+  /* a short gold rule stands in for the column hairline */
+  .family + .family::before {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 1px;
+    margin: 0 auto 40px;
+    background: var(--color-gold);
+    opacity: 0.6;
+  }
+}
