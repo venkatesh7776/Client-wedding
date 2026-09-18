@@ -13,18 +13,22 @@ export const ASSETS = {
   pillar: "/assets/images/Pillar.png",
   /** Portrait pillar for phones — 877x1792, from Figma "Mobile responsive" (node 84:4) */
   pillarMobile: "/assets/images/pillar-mobile.png",
-  /** Loader backdrop — 1264x711 */
-  loaderBackground: "/assets/images/loader-background.png",
-  /** Loader portrait inside the ring — 1089x1089 (space escaped for the URL) */
-  loaderCouple: "/assets/images/loader%202.png",
-  /** Loader Ring — the gold arc that sweeps around the portrait */
-  loaderRing: "/assets/icons/loader-ring-arc.svg",
+  /** Venues & Directions backdrop — 2880x2428, i.e. exactly 2x the 1440x1214 stage */
+  venueBackground: "/assets/images/VENUE%20BG%20copy.png",
+  /** Loader backdrop — 1665x944 (spaces escaped for the URL) */
+  loaderBackground: "/assets/images/ChatGPT%20Image%20Sep%2017,%202026,%2011_26_14%20PM.png",
+  /** Closing section backdrop — 2880x1554 palace terrace at sunrise (space escaped) */
+  footerBackground: "/assets/images/Footer%20.png",
+  /** Leave a Message backdrop — 2880x1560 navy skyline */
+  messageBackground: "/assets/images/VENU%20section7.png",
+  /** Watercolour mosque for the invitation — 3356x1874, transparent */
+  rsvpScene: "/assets/images/RSVP.png",
+  /** Cover that splits open over each celebration card — 478x553 */
+  thumbnail: "/assets/images/thumbnail.png",
+  /** Loader verse artwork — 522.948x121.013, used as a mask so it can fill */
+  verse: "/assets/icons/verse.svg",
   /** Rule to the left of the ampersand — 155px */
   dividerLeft: "/assets/icons/divider-left.svg",
   /** Rule to the right of the ampersand — 171px */
   dividerRight: "/assets/icons/divider-right.svg",
-  /** hugeicons:date-time — 24x24 */
-  iconDate: "/assets/icons/icon-date.svg",
-  /** codicon:location — 24x24 */
-  iconLocation: "/assets/icons/icon-location.svg",
 } as const;

@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 import { Hero } from "./Hero";
 import { Loader } from "./Loader";
+import { preloadImages } from "@/lib/preload";
 import { CUE, EASE, startLampDrift } from "@/lib/timeline";
 import { useStageScale } from "@/lib/useStageScale";
 
@@ -14,7 +15,7 @@ gsap.registerPlugin(useGSAP);
 /**
  * One master timeline carries the whole unveiling:
  *
- *   Loader Ring 360deg -> palace opens -> Pillar 1 + Pillar 2 close in ->
+ *   Verse settles, fills with gold -> palace fades up -> Pillar 1 + Pillar 2 close in ->
  *   Lamp 1 + Lamp 2 descend -> names settle -> Couple rises -> lamps drift on
  *
  * Only transforms, opacity and clip-path are animated, so the browser can keep
@@ -30,11 +31,14 @@ export function Invitation() {
       const q = gsap.utils.selector(root);
       const lamps = q("[data-lamp]");
 
+      const docEl = document.documentElement;
+      const release = () => docEl.classList.remove("is-holding");
+
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        release();
         // Land on the finished composition; no motion at all.
         gsap.set(q("[data-loader]"), { autoAlpha: 0, display: "none" });
         gsap.set(q("[data-hero-bg]"), { opacity: 1 });
-        gsap.set(q("[data-hero-clip]"), { clipPath: "none" });
         gsap.set([q("[data-pillar]"), lamps, q("[data-reveal]"), q("[data-couple]")], {
           opacity: 1,
           x: 0,
@@ -45,22 +49,57 @@ export function Invitation() {
         return;
       }
 
-      const tl = gsap.timeline({ defaults: { ease: EASE.settle } });
+      // hold the page at the top until the hero has finished arriving
+      docEl.classList.add("is-holding");
+      window.scrollTo(0, 0);
 
-      /* ---- Loader: one controlled clockwise turn, no easing games ---- */
+      const tl = gsap.timeline({ defaults: { ease: EASE.settle }, onComplete: release });
+
+      /* The loader is also cover for loading: every picture on the page is
+         fetched while the verse fills, and the hand-off to the hero waits for
+         them. Whichever finishes last — the verse or the images — decides. */
+      let imagesReady = false;
+      let waiting = false;
+      const openWhenReady = () => {
+        if (imagesReady && waiting) tl.resume();
+      };
+
+      preloadImages().then(() => {
+        imagesReady = true;
+        openWhenReady();
+      });
+
+      tl.addPause(CUE.loaderOut - 0.05, () => {
+        waiting = true;
+        openWhenReady();
+      });
+
+      /* ---- The verse and its translation arrive first ---- */
       tl.fromTo(
-        q("[data-ring]"),
-        { rotation: 0 },
+        q("[data-loader-line]"),
+        { opacity: 0, y: 14 },
         {
-          rotation: 360,
-          duration: CUE.ringDuration,
-          ease: "none",
-          transformOrigin: "50% 50%",
+          opacity: 1,
+          y: 0,
+          duration: CUE.textInDuration,
+          ease: EASE.settle,
+          stagger: CUE.textInStagger,
         },
-        CUE.ringStart,
+        CUE.textIn,
       );
 
-      /* ---- Loader dissolves outward rather than cutting away ---- */
+      /* ---- Then the gold fills them, left to right: the loading itself ---- */
+      tl.to(
+        q("[data-verse-fill]"),
+        {
+          clipPath: "inset(0 0% 0 0)",
+          duration: CUE.verseFillDuration,
+          ease: "none",
+        },
+        CUE.verseFill,
+      );
+
+      /* ---- The backdrop dissolves outward rather than cutting away ---- */
       tl.to(
         q("[data-loader]"),
         {
@@ -76,33 +115,18 @@ export function Invitation() {
         CUE.loaderOut + CUE.loaderOutDuration,
       );
 
-      /* ---- Hero 25%: the palace opens out of the ring's own footprint ---- */
+      /* ---- Hero 25%: the palace fades up behind the departing loader and
+             eases out of a slow push-in. No shape wipes across the frame. ---- */
       tl.to(
         q("[data-hero-bg]"),
-        { opacity: 1, duration: 0.9, ease: "power1.out" },
+        { opacity: 1, duration: CUE.heroInDuration, ease: "power1.inOut" },
         CUE.heroIn,
-      )
-        .fromTo(
-          q("[data-hero-clip]"),
-          { clipPath: "circle(15% at 50% 50%)" },
-          {
-            clipPath: "circle(105% at 50% 50%)",
-            duration: CUE.heroClipDuration,
-            ease: EASE.reveal,
-          },
-          CUE.heroClip,
-        )
-        .fromTo(
-          q("[data-hero-image]"),
-          { scale: 1.14 },
-          { scale: 1, duration: CUE.heroPushDuration, ease: EASE.reveal },
-          CUE.heroClip,
-        )
-        .set(
-          q("[data-hero-clip]"),
-          { clipPath: "none", willChange: "auto" },
-          CUE.heroClip + CUE.heroClipDuration,
-        );
+      ).fromTo(
+        q("[data-hero-image]"),
+        { scale: 1.14 },
+        { scale: 1, duration: CUE.heroPushDuration, ease: EASE.reveal },
+        CUE.heroIn,
+      );
 
       /* ---- Hero 50%: the arch closes in from both sides ---- */
       tl.fromTo(
@@ -166,6 +190,44 @@ export function Invitation() {
         CUE.couple,
       );
 
+      tl.call(release, undefined, CUE.float);
+
+      /* ---- once everything has settled, hint that the page continues ---- */
+      tl.call(
+        () => {
+          // Only if the visitor is still at the top and hasn't touched the page.
+          if (window.scrollY > 4) return;
+
+          const nudge = gsap.timeline();
+          const stop = () => {
+            nudge.kill();
+            events.forEach((e) => window.removeEventListener(e, stop));
+          };
+          const events = ["wheel", "touchstart", "keydown", "pointerdown"];
+          events.forEach((e) => window.addEventListener(e, stop, { passive: true, once: true }));
+
+          const pos = { y: 0 };
+          const toWindow = () => window.scrollTo(0, pos.y);
+          nudge
+            .to(pos, {
+              y: CUE.scrollHintDistance,
+              duration: 0.9,
+              ease: "power2.inOut",
+              onUpdate: toWindow,
+            })
+            .to(pos, {
+              y: 0,
+              duration: 0.8,
+              ease: "power2.inOut",
+              onUpdate: toWindow,
+              delay: 0.35,
+            })
+            .call(stop);
+        },
+        undefined,
+        CUE.scrollHint,
+      );
+
       /* ---- and the lamps never quite settle ---- */
       tl.call(
         () => {
@@ -177,6 +239,8 @@ export function Invitation() {
     },
     { scope: root },
   );
+
+  useEffect(() => () => document.documentElement.classList.remove("is-holding"), []);
 
   return (
     <div className="page" ref={root}>

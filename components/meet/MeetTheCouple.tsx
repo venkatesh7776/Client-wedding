@@ -20,6 +20,14 @@ const SIDE_BY_SIDE = "(min-width: 700px)";
  * only, long `power2` curves, nothing that bounces or spins. Each block plays
  * once as it scrolls into view.
  */
+/*
+ * `toggleActions: "play none none none"` rather than `once: true`: a trigger
+ * that kills itself during ScrollTrigger's first refresh mutates the list it
+ * is being iterated over, which throws if the page is reloaded already
+ * scrolled into the section. These play once and simply stay alive.
+ */
+const PLAY_ONCE = "play none none none";
+
 const EASE = "power2.out";
 const EASE_ARCH = "power2.inOut";
 
@@ -60,37 +68,41 @@ export function MeetTheCouple() {
       gsap.set(hidden.center, { opacity: 0, y: 16 });
 
       const onEnter = (trigger: Element | undefined, start = "top 78%") =>
-        gsap.timeline({ scrollTrigger: { trigger, start, once: true } });
+        gsap.timeline(
+          trigger
+            ? { scrollTrigger: { trigger, start, toggleActions: PLAY_ONCE } }
+            : {},
+        );
 
       /* 1–3: architecture, title, divider */
       const head = q("[data-meet-heading]")[0];
       onEnter(head, "top 85%")
         .to(hidden.backdrop, { opacity: 1, duration: 1.6, ease: "power1.out" }, 0)
         .to(q("[data-meet-heading] > *:not([data-ornament])"), {
-          opacity: 1, y: 0, duration: 1.2, ease: EASE, stagger: 0.18,
-        }, 0.3)
+          opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14,
+        }, 0.05)
         .to(q("[data-meet-heading] [data-ornament-rule]"), {
-          opacity: 1, scaleX: 1, duration: 1.2, ease: EASE_ARCH,
-        }, 0.8)
-        .to(q("[data-meet-heading] [data-ornament-star]"), { opacity: 1, duration: 0.9, ease: EASE }, 1.1);
+          opacity: 1, scaleX: 1, duration: 1.0, ease: EASE_ARCH,
+        }, 0.3)
+        .to(q("[data-meet-heading] [data-ornament-star]"), { opacity: 1, duration: 0.7, ease: EASE }, 0.6);
 
       /* 4–10: one person's arch, photograph, then their details */
       const person = (tl: gsap.core.Timeline, side: "bride" | "groom", at: number) => {
         const s = (sel: string) => q(`[data-person="${side}"] ${sel}`);
         return tl
           .to(s("[data-arch]"), {
-            clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.6, ease: EASE_ARCH,
+            clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.25, ease: EASE_ARCH,
           }, at)
           // release the clip so the finial and shadow can breathe
-          .set(s("[data-arch]"), { clipPath: "none" }, at + 1.6)
-          .to(s("[data-arch-window]"), { opacity: 1, scale: 1, duration: 1.4, ease: EASE }, at + 1.0)
+          .set(s("[data-arch]"), { clipPath: "none" }, at + 1.25)
+          .to(s("[data-arch-window]"), { opacity: 1, scale: 1, duration: 1.0, ease: EASE }, at + 0.6)
           .to(s("[data-info-line]"), {
-            opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14,
-          }, at + 1.5);
+            opacity: 1, y: 0, duration: 0.85, ease: EASE, stagger: 0.12,
+          }, at + 0.9);
       };
 
       const centreIn = (tl: gsap.core.Timeline, at: number) =>
-        tl.to(hidden.center, { opacity: 1, y: 0, duration: 1.4, ease: EASE }, at);
+        tl.to(hidden.center, { opacity: 1, y: 0, duration: 1.0, ease: EASE }, at);
 
       const mm = gsap.matchMedia();
 
@@ -101,33 +113,33 @@ export function MeetTheCouple() {
         const tl = onEnter(q("[data-meet-couple]")[0], "top 72%");
         person(tl, "bride", 0);
         person(tl, "groom", 0);
-        centreIn(tl, 1.2);
+        centreIn(tl, 0.5);
       });
 
       mm.add("(max-width: 699px)", () => {
         // Stacked, each block reveals as it reaches the viewport.
         person(onEnter(q('[data-person="bride"]')[0], "top 80%"), "bride", 0);
         onEnter(hidden.center[0], "top 88%")
-          .to(hidden.center, { opacity: 1, y: 0, duration: 1.2, ease: EASE }, 0)
+          .to(hidden.center, { opacity: 1, y: 0, duration: 0.9, ease: EASE }, 0)
           .to(q("[data-meet-center] [data-ornament-rule]"), {
-            opacity: 1, scaleX: 1, duration: 1.2, ease: EASE_ARCH,
-          }, 0.2)
-          .to(q("[data-meet-center] [data-ornament-star]"), { opacity: 1, duration: 0.9 }, 0.6);
+            opacity: 1, scaleX: 1, duration: 0.9, ease: EASE_ARCH,
+          }, 0.15)
+          .to(q("[data-meet-center] [data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.4);
         person(onEnter(q('[data-person="groom"]')[0], "top 80%"), "groom", 0);
       });
 
       /* 11: families, gently staggered */
       onEnter(q("[data-families]")[0], "top 80%")
         .to(q("[data-families-head] > *:not([data-ornament])"), {
-          opacity: 1, y: 0, duration: 1.1, ease: EASE, stagger: 0.16,
+          opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.13,
         }, 0)
         .to(q("[data-families] [data-ornament-rule]"), {
-          opacity: 1, scaleX: 1, duration: 1.1, ease: EASE_ARCH,
-        }, 0.4)
-        .to(q("[data-families] [data-ornament-star]"), { opacity: 1, duration: 0.8 }, 0.7)
+          opacity: 1, scaleX: 1, duration: 0.9, ease: EASE_ARCH,
+        }, 0.3)
+        .to(q("[data-families] [data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.5)
         .to(q("[data-family-col]"), {
-          opacity: 1, y: 0, duration: 1.2, ease: EASE, stagger: 0.22,
-        }, 0.7);
+          opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.16,
+        }, 0.5);
     },
     { scope: root },
   );

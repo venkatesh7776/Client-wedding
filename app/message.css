@@ -1,0 +1,237 @@
+/* ==========================================================================
+   SECTION 7 — LEAVE A MESSAGE
+   The last of the daylight sections: same ivory, lattice and gold rules, with
+   the form set as a single sheet of stationery the guest writes on.
+   ========================================================================== */
+
+.message {
+  --navy: #00263e; /* sampled from the backdrop so the edges blend */
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: clip;
+  padding: clamp(78px, 9vw, 130px) clamp(20px, 5vw, 64px) clamp(96px, 11vw, 150px);
+  background: var(--navy);
+  color: var(--cream, #f5efe3);
+}
+
+.message__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.message__bgImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* softens the joins with the ivory sections either side */
+.message__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--navy) 0,
+    rgba(0, 38, 62, 0) 14%,
+    rgba(0, 38, 62, 0) 86%,
+    var(--navy) 100%
+  );
+}
+
+/* ---------- Two columns: the words on the left, the card on the right ---------- */
+
+.message__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* ---------- Heading ---------- */
+
+.message__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 480px;
+  margin: 0;
+  text-align: left;
+}
+
+.message__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  color: #f5efe3;
+}
+
+.message__subtitle {
+  margin: clamp(10px, 1.3vw, 16px) 0 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: clamp(18px, 1.9vw, 25px);
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--color-ink) 82%, transparent);
+}
+
+.message__ornament { margin-top: clamp(16px, 2vw, 26px); }
+
+/* the shared ornament art is ink-coloured; on navy it reads as gold instead */
+.message .ornament__rule { filter: brightness(0) saturate(100%) invert(72%) sepia(19%) saturate(830%) hue-rotate(2deg) brightness(90%) contrast(86%); }
+.message .ornament__star { color: #b89a61; }
+.message .ornament__star svg circle { fill: #00263e; }
+
+.message__intro {
+  max-width: 460px;
+  margin: clamp(18px, 2.2vw, 28px) 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(14.5px, 1.25vw, 17px);
+  line-height: 1.65;
+  text-wrap: balance;
+  color: rgba(245, 239, 227, 0.82);
+}
+
+/* ---------- The card ---------- */
+
+.message__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: clamp(26px, 3.2vw, 44px) clamp(22px, 3vw, 44px) clamp(24px, 3vw, 38px);
+  background: linear-gradient(to bottom, #fefaf1, color-mix(in srgb, var(--color-stone-light) 40%, #fff));
+  border: 1px solid color-mix(in srgb, var(--color-gold) 46%, transparent);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 4px color-mix(in srgb, #fff 55%, transparent),
+    0 24px 36px -30px var(--color-stone-shadow);
+}
+
+.message__cardTitle {
+  margin: 0 0 clamp(18px, 2vw, 26px);
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--color-ink);
+}
+
+.message__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: clamp(14px, 1.6vw, 20px);
+}
+
+.message__label {
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+.message__input {
+  width: 100%;
+  padding: 13px 15px;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.5;
+  color: var(--color-ink);
+  background: #fffdf7;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 38%, transparent);
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message__input::placeholder { color: color-mix(in srgb, var(--color-ink) 42%, transparent); }
+
+.message__input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 18%, transparent);
+}
+
+.message__input[aria-invalid="true"] {
+  border-color: #b4573f;
+  box-shadow: 0 0 0 3px rgba(180, 87, 63, 0.12);
+}
+
+.message__input--area {
+  resize: vertical;
+  min-height: 132px;
+}
+
+.message__error {
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: 12.5px;
+  color: #a04c36;
+}
+
+.message__cta {
+  align-self: center;
+  min-height: 52px;
+  margin-top: clamp(8px, 1vw, 14px);
+  padding: 0 clamp(26px, 3vw, 42px);
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(13px, 1.1vw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #f7f0e1;
+  background: linear-gradient(to bottom, #123a52, #0a2f45);
+  border: 1px solid rgba(10, 47, 69, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 12px 20px -14px rgba(10, 47, 69, 0.9);
+  cursor: pointer;
+  transition: filter 0.4s ease;
+}
+
+.message__cta:hover,
+.message__cta:focus-visible { filter: brightness(1.15); }
+
+.message__status {
+  min-height: 1.4em;
+  margin: 12px 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: 13px;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-ink) 70%, transparent);
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 860px) {
+  .message { padding: clamp(60px, 11vw, 92px) 20px clamp(72px, 12vw, 104px); }
+  .message__intro { font-size: clamp(13.5px, 3.7vw, 16px); }
+  .message__inner {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .message__head {
+    align-items: center;
+    max-width: none;
+    text-align: center;
+  }
+
+  .message__intro { max-width: none; }
+
+  .message__card { padding: 24px 18px 22px; }
+  .message__cta { width: 100%; }
+}

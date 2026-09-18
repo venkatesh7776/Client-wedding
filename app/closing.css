@@ -1,0 +1,96 @@
+/* ==========================================================================
+   SECTION 9 — THE CLOSING PRAYER
+   Named `farewell`, not `closing`: Section 3 already uses `.closing` for its
+   own sign-off block, and the two were inheriting each other's styles.
+   The terrace at sunrise fills the frame. The thanks sits small above the
+   prayer; the prayer is the largest thing on the page's final screen.
+   ========================================================================== */
+
+.farewell {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: clamp(560px, 54vw, 780px);
+  padding: clamp(64px, 8vw, 116px) clamp(20px, 5vw, 64px) clamp(80px, 9vw, 130px);
+  background: #f3ead9;
+  color: var(--color-ink);
+}
+
+/* ---------- The terrace ---------- */
+
+.farewell__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.farewell__bgImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+}
+
+/* light wash so the words hold against the sky, and a soft join at the top */
+.farewell__scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    58% 42% at 50% 30%,
+    rgba(255, 252, 244, 0.72),
+    rgba(255, 252, 244, 0.28) 62%,
+    transparent 82%
+  );
+}
+
+/* ---------- The words ---------- */
+
+.farewell__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  text-align: center;
+}
+
+.farewell__gratitude {
+  margin: 0;
+  max-width: 620px;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: 18px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+  color: color-mix(in srgb, var(--color-ink) 82%, transparent);
+}
+
+.farewell__arabic {
+  margin: clamp(26px, 3.2vw, 44px) 0 0;
+  font-family: var(--font-bismillah);
+  font-weight: 400;
+  font-size: 54px;
+  line-height: 1.55;
+  font-variation-settings: "wdth" 100;
+  color: var(--color-ink);
+  text-shadow: 0 1px 0 rgba(255, 253, 246, 0.6);
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 860px) {
+  .farewell {
+    min-height: 520px;
+    padding: clamp(52px, 11vw, 80px) 22px clamp(64px, 12vw, 96px);
+  }
+
+  .farewell__bgImg { object-position: center 58%; }
+
+  .farewell__gratitude { font-size: clamp(15px, 4.2vw, 18px); line-height: 1.7; }
+
+  .farewell__arabic { font-size: clamp(30px, 9vw, 54px); }
+}

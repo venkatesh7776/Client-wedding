@@ -1,0 +1,205 @@
+/* ==========================================================================
+   SECTION 8 — IF IN NEED OF ASSISTANCE
+   Two engraved plaques rather than contact cards: the name cut into stone, the
+   relationship in gold beneath it, and the number the one thing to act on.
+   ========================================================================== */
+
+.assist {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: clip;
+  padding: clamp(74px, 8.5vw, 120px) clamp(20px, 5vw, 64px) clamp(88px, 10vw, 140px);
+  background: var(--color-ivory);
+  color: var(--color-ink);
+}
+
+.assist__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-stone-light) 34%, var(--color-ivory)) 0,
+    var(--color-ivory) 40%,
+    color-mix(in srgb, var(--color-stone-light) 40%, var(--color-ivory)) 100%
+  );
+}
+
+/* ---------- Heading ---------- */
+
+.assist__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.assist__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(32px, 4.2vw, 54px);
+  line-height: 1.08;
+  color: var(--color-ink);
+  text-shadow: 1.5px 1.5px 0 var(--color-ink-shadow);
+}
+
+.assist__subtitle {
+  max-width: 560px;
+  margin: clamp(12px, 1.4vw, 18px) 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(14px, 1.2vw, 16.5px);
+  line-height: 1.6;
+  text-wrap: balance;
+  color: color-mix(in srgb, var(--color-ink) 76%, transparent);
+}
+
+.assist__ornament { margin-top: clamp(16px, 2vw, 26px); }
+
+/* ---------- The pair ---------- */
+
+.assist__pair {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 48px);
+  max-width: 880px;
+  margin: clamp(34px, 4vw, 56px) auto 0;
+}
+
+/* the rule between them, with a star on it */
+.assist__spine {
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1px;
+  margin-left: -0.5px;
+  color: var(--color-gold);
+  transform-origin: 50% 50%;
+}
+
+.assist__spineLine {
+  flex: 1 1 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, currentColor);
+}
+.assist__spineLine:last-of-type { background: linear-gradient(to top, transparent, currentColor); }
+
+.assist__spineStar { padding: 8px 0; }
+
+/* ---------- A plaque ---------- */
+
+.assist__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(26px, 3vw, 40px) clamp(18px, 2.4vw, 34px) clamp(22px, 2.6vw, 32px);
+  text-align: center;
+  background: linear-gradient(to bottom, #fefaf1, color-mix(in srgb, var(--color-stone-light) 38%, #fff));
+  border: 1px solid color-mix(in srgb, var(--color-gold) 44%, transparent);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 4px color-mix(in srgb, #fff 58%, transparent),
+    inset 0 0 0 5px color-mix(in srgb, var(--color-gold) 24%, transparent),
+    0 22px 32px -28px var(--color-stone-shadow);
+}
+
+.assist__role {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(9.5px, 0.85vw, 11px);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+.assist__name {
+  margin: clamp(8px, 1vw, 12px) 0 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(21px, 2.1vw, 28px);
+  line-height: 1.2;
+  text-wrap: balance;
+  color: var(--color-ink);
+}
+
+/* the number is the only thing to act on */
+.assist__call {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  margin-top: clamp(16px, 1.8vw, 22px);
+  padding: 0 clamp(18px, 2vw, 26px);
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-gold) 12%, #fffdf6);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 58%, transparent);
+  border-radius: 999px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+.assist__call svg { color: var(--color-gold-deep); flex: none; }
+
+.assist__call:hover,
+.assist__call:focus-visible {
+  background: color-mix(in srgb, var(--color-gold) 22%, #fffdf6);
+  border-color: var(--color-gold);
+}
+
+.assist__call--pending {
+  color: color-mix(in srgb, var(--color-ink) 52%, transparent);
+  background: transparent;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
+  cursor: default;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 860px) {
+  .assist { padding: clamp(58px, 11vw, 88px) 20px clamp(72px, 12vw, 104px); }
+
+  .assist__pair {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    max-width: 380px;
+  }
+
+  /* the rule turns and sits between the two plaques */
+  .assist__spine {
+    top: auto;
+    bottom: auto;
+    left: 50%;
+    width: 120px;
+    height: 1px;
+    margin: 0 0 0 -60px;
+    top: calc(50% - 0.5px);
+    flex-direction: row;
+  }
+
+  .assist__spineLine { height: 1px; width: auto; flex: 1 1 0; }
+  .assist__spineLine { background: linear-gradient(to right, transparent, currentColor); }
+  .assist__spineLine:last-of-type { background: linear-gradient(to left, transparent, currentColor); }
+  .assist__spineStar { padding: 0 8px; }
+
+  .assist__call { width: 100%; min-height: 50px; }
+}

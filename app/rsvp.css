@@ -1,0 +1,167 @@
+/* ==========================================================================
+   SECTION 6 — INVITATION & RSVP
+   The palace stands alone on the ivory, its edges dissolving into the ground
+   the way a watercolour would. Everything under it is the invitation itself.
+   ========================================================================== */
+
+.rsvp {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(24px, 4vw, 56px) clamp(20px, 5vw, 64px) clamp(84px, 9vw, 130px);
+  text-align: center;
+  /* Section 5 ends on stone-light at 26%; this begins there so the two meet
+     without a step, then settles back to ivory. */
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-stone-light) 26%, var(--color-ivory)) 0,
+    color-mix(in srgb, var(--color-stone-light) 12%, var(--color-ivory)) 22%,
+    var(--color-ivory) 55%,
+    color-mix(in srgb, var(--color-stone-light) 22%, var(--color-ivory)) 100%
+  );
+  color: var(--color-ink);
+}
+
+/* ---------- The palace ---------- */
+
+.rsvp__scene {
+  width: min(920px, 94vw);
+  margin-bottom: clamp(18px, 2.4vw, 34px);
+}
+
+/* the artwork is a cut-out, so it needs no mask of its own */
+.rsvp__sceneImg {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- The invitation ---------- */
+
+.rsvp__eyebrow {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(10px, 0.95vw, 12.5px);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+.rsvp__names {
+  margin: clamp(12px, 1.4vw, 18px) 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 68px);
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  text-shadow: 1.5px 1.5px 0 var(--color-ink-shadow);
+}
+
+.rsvp__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 640px;
+  margin: clamp(16px, 1.8vw, 24px) 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(14.5px, 1.25vw, 17px);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--color-ink) 78%, transparent);
+}
+
+/* ---------- The RSVP bar ---------- */
+
+.rsvp__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(18px, 3vw, 44px);
+  width: min(720px, 100%);
+  margin: clamp(30px, 3.6vw, 48px) auto 0;
+  padding: clamp(16px, 1.8vw, 22px) clamp(16px, 1.8vw, 22px) clamp(16px, 1.8vw, 22px) clamp(24px, 2.8vw, 38px);
+  text-align: left;
+  background: linear-gradient(to bottom, #fdf8ec, color-mix(in srgb, var(--color-stone-light) 42%, #fff));
+  border: 1px solid color-mix(in srgb, var(--color-gold) 46%, transparent);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 4px color-mix(in srgb, #fff 55%, transparent),
+    0 22px 34px -28px var(--color-stone-shadow);
+}
+
+.rsvp__occasion {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: clamp(19px, 1.9vw, 25px);
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.rsvp__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 8px;
+  margin: 6px 0 0;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(13px, 1.15vw, 15.5px);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--color-ink) 70%, transparent);
+}
+
+.rsvp__dot { color: var(--color-gold); }
+
+.rsvp__cta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 clamp(24px, 2.8vw, 38px);
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(13px, 1.1vw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: #f7f0e1;
+  background: linear-gradient(to bottom, #123a52, #0a2f45);
+  border: 1px solid rgba(10, 47, 69, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 12px 20px -14px rgba(10, 47, 69, 0.9);
+  transition: filter 0.4s ease;
+}
+
+.rsvp__cta:hover,
+.rsvp__cta:focus-visible { filter: brightness(1.15); }
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 860px) {
+  .rsvp { padding: 16px 20px clamp(64px, 12vw, 92px); }
+
+  .rsvp__scene { width: 108vw; margin-bottom: 10px; }
+
+  .rsvp__body { font-size: clamp(13.5px, 3.7vw, 16px); }
+
+  .rsvp__bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .rsvp__meta { justify-content: center; }
+
+  .rsvp__cta { width: 100%; }
+}

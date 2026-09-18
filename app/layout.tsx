@@ -3,6 +3,13 @@ import { Amiri, Arbutus, Bricolage_Grotesque, Instrument_Serif } from "next/font
 
 import "./globals.css";
 import "./meet.css";
+import "./celebrate.css";
+import "./venues.css";
+import "./dress.css";
+import "./rsvp.css";
+import "./message.css";
+import "./contact.css";
+import "./closing.css";
 
 const instrument = Instrument_Serif({
   weight: "400",
@@ -40,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0c2a3d",
+  themeColor: "#013340",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -54,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         {/* The palace has to be decoded before the ring lands at 2.8s. */}
-        <link rel="preload" as="image" href="/assets/images/loader-background.png" />
+        <link rel="preload" as="image" href="/assets/images/ChatGPT%20Image%20Sep%2017,%202026,%2011_26_14%20PM.png" />
         <link rel="preload" as="image" href="/assets/images/hero-background.png" />
       </head>
       <body>{children}</body>

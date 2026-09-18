@@ -1,0 +1,381 @@
+/* ==========================================================================
+   SECTION 4 — VENUES & DIRECTIONS
+   The three sections above are daylight. This one steps into evening: the
+   loader's navy artwork returns as the wall, with cream type and gold for
+   every structural line. Reading order is name → address → directions.
+   ========================================================================== */
+
+.venues {
+  --navy-deep: #002239; /* sampled from the backdrop so the edges blend */
+  --cream: #f5efe3;
+  --gold-muted: #b89a61;
+  --blue-soft: #afc6d2;
+
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: clip;
+  /* The artwork is 2880x2428 — exactly twice the 1440x1214 stage it was drawn
+     for — so the section holds that height and the picture fills it uncropped. */
+  height: 1214px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: clamp(56px, 6vw, 92px) clamp(20px, 4vw, 56px) clamp(24px, 3vw, 44px);
+  background: var(--navy-deep);
+  color: var(--cream);
+}
+
+/* ---------- Wall ---------- */
+
+.venues__defs { position: absolute; width: 0; height: 0; }
+
+.venues__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.venues__bgImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* The artwork already keeps its centre clear, so this only softens the top and
+   bottom edges into the neighbouring sections and lifts contrast behind the
+   panels a touch. The jasmine corners stay visible. */
+.venues__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    /* keeps the centre calm without hiding the skyline along the foot */
+    radial-gradient(56% 40% at 50% 44%, rgba(0, 36, 58, 0.5), transparent 74%),
+    linear-gradient(
+      to bottom,
+      var(--navy-deep) 0,
+      rgba(0, 36, 58, 0) 14%,
+      rgba(0, 36, 58, 0) 88%,
+      var(--navy-deep) 100%
+    );
+}
+
+/* ---------- Heading ---------- */
+
+.venues__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.venues__lede {
+  margin: 0 0 clamp(12px, 1.4vw, 18px);
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+}
+
+.venues__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 66px);
+  line-height: 1.05;
+  color: var(--cream);
+}
+
+.venues__ornament {
+  margin-top: clamp(12px, 1.6vw, 20px);
+  color: var(--gold-muted);
+}
+
+/* the shared ornament art is ink-coloured; on navy it reads as gold instead */
+.venues .ornament__rule { filter: brightness(0) saturate(100%) invert(72%) sepia(19%) saturate(830%) hue-rotate(2deg) brightness(90%) contrast(86%); }
+.venues .ornament__star { color: var(--gold-muted); }
+.venues .ornament__star svg circle { fill: #06263a; }
+
+/* ---------- Panels ---------- */
+
+.venues__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(20px, 2.4vw, 36px);
+  max-width: 960px;
+  margin: clamp(18px, 2.2vw, 30px) auto 0;
+}
+
+/* The card is the artwork itself; nothing is drawn around it. The art is
+   1644x1812; the box is 3.3% taller than that (604 -> 624 at full size) and the
+   image is stretched to fill it, so only the height changes. */
+.venue {
+  position: relative;
+  aspect-ratio: 1644 / 1872;
+  filter: drop-shadow(0 24px 30px rgba(0, 20, 34, 0.5));
+}
+
+.venue__art {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* the blank panel inside the frame, measured from the artwork */
+.venue__plate {
+  position: absolute;
+  top: 49%;
+  right: 15%;
+  bottom: 10.5%;
+  left: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ---------- Type ---------- */
+
+.venue__occasion {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(21px, 2.1vw, 29px);
+  line-height: 1.1;
+  color: #0a2f45;
+}
+
+.venue__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: min(130px, 52%);
+  margin: clamp(6px, 0.8vw, 10px) 0 clamp(8px, 0.9vw, 11px);
+  color: #a4874f;
+}
+
+.venue__dividerRule {
+  flex: 1 1 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+}
+.venue__dividerRule:last-of-type {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.venue__dividerGem {
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.venue__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.45vw, 19px);
+  line-height: 1.3;
+  text-wrap: balance;
+  color: #123a52;
+}
+
+.venue__address {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: clamp(8px, 1vw, 13px) 0 0;
+  font-style: normal;
+  text-align: left;
+}
+
+.venue__addressPin { color: #a4874f; flex: none; margin-top: 1px; }
+
+.venue__addressLines {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(11.5px, 1vw, 14px);
+  line-height: 1.45;
+  color: #123a52;
+}
+
+.venue__addressPending {
+  margin: clamp(8px, 1vw, 13px) 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.1vw, 15px);
+  color: rgba(10, 47, 69, 0.6);
+}
+
+/* ---------- Directions ---------- */
+
+.venue__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: clamp(36px, 3.4vw, 44px);
+  margin-top: clamp(11px, 1.4vw, 18px);
+  padding: 0 clamp(16px, 1.8vw, 26px);
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(10px, 0.9vw, 12.5px);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #f7f0e1;
+  background: linear-gradient(to bottom, #123a52, #0a2f45);
+  border: 1px solid rgba(10, 47, 69, 0.6);
+  border-radius: 2px;
+  box-shadow: 0 10px 18px -12px rgba(10, 47, 69, 0.9);
+  transition: filter 0.4s ease;
+}
+
+.venue__cta svg { color: #d8bc86; }
+
+.venue__cta:hover,
+.venue__cta:focus-visible { filter: brightness(1.15); }
+
+.venue__cta--pending {
+  color: rgba(10, 47, 69, 0.5);
+  background: transparent;
+  border-style: dashed;
+  border-color: rgba(164, 135, 79, 0.55);
+  box-shadow: none;
+  cursor: default;
+}
+.venue__cta--pending svg { color: rgba(164, 135, 79, 0.75); }
+
+/* ---------- Countdown ---------- */
+
+.countdown {
+  width: min(100%, 720px);
+  margin: clamp(58px, 6.4vw, 96px) auto 0;
+}
+
+/* a plain architectural frame: hairline rule, gold corner brackets */
+.countdown__frame {
+  position: relative;
+  padding: clamp(18px, 2vw, 26px) clamp(20px, 3vw, 44px) clamp(16px, 1.8vw, 24px);
+  background: linear-gradient(to bottom, rgba(10, 47, 69, 0.34), rgba(0, 34, 57, 0.46));
+  border: 1px solid rgba(184, 154, 97, 0.34);
+  border-radius: 2px;
+  /* the skyline behind reads as a soft wash rather than detail */
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+}
+
+/* brackets sit astride the frame's corners */
+.countdown__corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--gold-muted);
+}
+.countdown__corner--tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.countdown__corner--tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+.countdown__corner--bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+.countdown__corner--br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.countdown__title {
+  margin: 0 0 clamp(10px, 1.2vw, 16px);
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(9.5px, 0.9vw, 11.5px);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gold-muted);
+}
+
+.countdown__units {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 clamp(6px, 1vw, 14px);
+}
+
+/* hairlines between the units */
+.countdown__unit + .countdown__unit {
+  border-left: 1px solid rgba(184, 154, 97, 0.26);
+}
+
+.countdown__value {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  color: var(--cream);
+}
+
+.countdown__label {
+  font-family: var(--font-ui);
+  font-variation-settings: "opsz" 14, "wdth" 100;
+  font-size: clamp(9px, 0.85vw, 11px);
+  letter-spacing: 0.2em;
+  text-transform: lowercase;
+  color: rgba(175, 198, 210, 0.75);
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 860px) {
+  .venues {
+    height: auto;
+    padding: clamp(72px, 12vw, 110px) 8px clamp(80px, 13vw, 120px);
+  }
+
+  .venues__grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    max-width: 520px;
+  }
+
+  /* The panel is a fixed share of the card, so on a phone the text was taller
+     than the panel and spilled over the illustration. A taller card gives it
+     room; the art stretches with the box. */
+  .venue { aspect-ratio: 1644 / 2380; }
+
+  .venue__plate { padding: 0 2%; }
+
+  .venue__occasion { font-size: clamp(22px, 6.4vw, 30px); }
+  .venue__name { font-size: clamp(15px, 4.2vw, 19px); }
+  .venue__addressLines { font-size: clamp(13px, 3.6vw, 16px); }
+
+  .countdown { margin-top: 26px; }
+  .countdown__frame { padding: 16px 10px 14px; }
+  .countdown__unit { padding: 0 4px; }
+  .countdown__value { font-size: clamp(24px, 7.4vw, 38px); }
+  .countdown__label { font-size: clamp(8px, 2.5vw, 10px); letter-spacing: 0.12em; }
+
+  .venue__cta {
+    width: 100%;
+    min-height: 46px;
+    font-size: clamp(11px, 3vw, 13px);
+  }
+}

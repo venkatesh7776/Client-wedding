@@ -6,43 +6,51 @@ import gsap from "gsap";
  * without touching the tweens.
  */
 export const CUE = {
-  /** Loader Ring sweeps a full clockwise turn. */
-  ringStart: 0,
-  ringDuration: 2.8,
+  /** The verse and its translation settle in first, before anything loads. */
+  textIn: 0.25,
+  textInDuration: 1.0,
+  textInStagger: 0.16,
 
-  /** Loader starts dissolving just before the ring lands, so there is no cut. */
-  loaderOut: 2.6,
-  loaderOutDuration: 1.0,
+  /** Only then does the gold fill run, left to right — the loading itself. */
+  verseFill: 1.5,
+  verseFillDuration: 2.2,
 
-  /** Palace opens out of the ring's footprint. */
-  heroIn: 2.6,
-  heroClip: 2.8,
-  heroClipDuration: 1.9,
-  heroPushDuration: 3.6,
+  /** The loader lifts away and the palace is simply there behind it. */
+  loaderOut: 3.8,
+  loaderOutDuration: 1.2,
+
+  /** Palace fades up under the departing loader and settles out of its push-in. */
+  heroIn: 3.7,
+  heroInDuration: 1.6,
+  heroPushDuration: 3.8,
 
   /** The architecture closes in around the scene. */
-  pillars: 3.6,
+  pillars: 4.9,
   pillarsDuration: 2.0,
 
   /* From here the moves overlap rather than queue, so the scene never stops
      and restarts — each element is still settling as the next begins. */
 
   /** Lamp 1, then Lamp 2, descend. */
-  lamps: 5.0,
+  lamps: 6.3,
   lampsDuration: 1.5,
   lampsStagger: 0.22,
 
   /** Names settle down from above. */
-  text: 5.3,
+  text: 6.6,
   textDuration: 1.2,
   textStagger: 0.14,
 
   /** The couple rises into the courtyard. */
-  couple: 5.5,
+  couple: 6.8,
   coupleDuration: 1.5,
 
   /** Lamps take on a life of their own. */
-  float: 7.1,
+  float: 8.4,
+
+  /** A short nudge down and back, so it is clear the page continues. */
+  scrollHint: 11.5,
+  scrollHintDistance: 90,
 } as const;
 
 /**

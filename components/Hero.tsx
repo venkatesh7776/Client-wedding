@@ -65,6 +65,10 @@ export function Hero() {
             {COPY.bismillah}
           </p>
 
+          <p className="announcement" data-reveal>
+            {COPY.announcement}
+          </p>
+
           <div className="names">
             <p className="name name--first" data-reveal>
               {COPY.bride}
@@ -82,23 +86,6 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Figma sizes these groups 184px and 197px inside a 435px row, which is
-            what produces the 54px gap — so the labels carry fixed widths rather
-            than letting the text measure itself. */}
-        <div className="hero__meta" data-reveal>
-          <span className="meta__item meta__item--date">
-            <span className="meta__icon meta__icon--date">
-              <img src={ASSETS.iconDate} alt="" aria-hidden />
-            </span>
-            <span className="meta__label">{COPY.date}</span>
-          </span>
-          <span className="meta__item meta__item--place">
-            <span className="meta__icon meta__icon--location">
-              <img src={ASSETS.iconLocation} alt="" aria-hidden />
-            </span>
-            <span className="meta__label">{COPY.place}</span>
-          </span>
-        </div>
       </div>
     </section>
   );
