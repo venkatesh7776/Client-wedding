@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#013340",
+  themeColor: "#01313e",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         {/* The palace has to be decoded before the ring lands at 2.8s. */}
-        <link rel="preload" as="image" href="/assets/images/ChatGPT%20Image%20Sep%2017,%202026,%2011_26_14%20PM.png" />
+        <link rel="preload" as="image" href="/assets/images/new%20loader%20bg.webp" />
         <link rel="preload" as="image" href="/assets/images/hero-background.png" />
       </head>
       <body>{children}</body>

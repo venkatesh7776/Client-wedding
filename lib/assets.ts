@@ -15,8 +15,8 @@ export const ASSETS = {
   pillarMobile: "/assets/images/pillar-mobile.png",
   /** Venues & Directions backdrop — 2880x2428, i.e. exactly 2x the 1440x1214 stage */
   venueBackground: "/assets/images/VENUE%20BG%20copy.png",
-  /** Loader backdrop — 1665x944 (spaces escaped for the URL) */
-  loaderBackground: "/assets/images/ChatGPT%20Image%20Sep%2017,%202026,%2011_26_14%20PM.png",
+  /** Loader backdrop — 1665x944 WebP (spaces escaped for the URL) */
+  loaderBackground: "/assets/images/new%20loader%20bg.webp",
   /** Closing section backdrop — 2880x1554 palace terrace at sunrise (space escaped) */
   footerBackground: "/assets/images/Footer%20.png",
   /** Leave a Message backdrop — 2880x1560 navy skyline */

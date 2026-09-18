@@ -19,7 +19,7 @@
   --color-on-dark-soft: rgba(255, 255, 255, 0.8);
   --color-gold-loader: #ffa629; /* the verse fills with this */
   --color-loader-ring: #7f7f7f;
-  --color-night: #013340; /* backstop behind the loader photo only — sampled from it */
+  --color-night: #01313e; /* backstop behind the loader art — sampled from it */
 
   --gradient-sky: linear-gradient(
     to bottom,
