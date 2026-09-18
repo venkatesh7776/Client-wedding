@@ -1,14 +1,15 @@
 import { ASSETS } from "@/lib/assets";
 import { COPY } from "@/lib/copy";
 
+import { VerseArt } from "./VerseArt";
+
 /**
  * Loader — Figma node 112:42.
  *
  * The verse and its translation settle in first; only then does the verse
- * itself become the progress indicator, filling with gold from the left. The
- * artwork is used
- * as a mask so the same glyphs can be painted twice, white beneath and gold
- * above, with only the gold layer's clip animating.
+ * itself become the progress indicator, filling with gold from the left. Its
+ * outlines are inlined rather than fetched, so they are on screen with the
+ * first paint — a loading screen that has to load is no loading screen.
  */
 export function Loader() {
   return (
@@ -16,15 +17,8 @@ export function Loader() {
       <img className="loader__bg" src={ASSETS.loaderBackground} alt="" aria-hidden />
 
       <div className="loader__content">
-        <div
-          className="verse"
-          data-loader-line
-          role="img"
-          aria-label={`${COPY.verseMeaning} ${COPY.verseReference}`}
-          style={{ "--verse": `url("${ASSETS.verse}")` } as React.CSSProperties}
-        >
-          <span className="verse__layer verse__base" />
-          <span className="verse__layer verse__fill" data-verse-fill />
+        <div className="verse__frame" data-loader-line role="img" aria-label={`${COPY.verseMeaning} ${COPY.verseReference}`}>
+          <VerseArt />
         </div>
 
         <p className="loader__meaning" data-loader-line>{COPY.verseMeaning}</p>

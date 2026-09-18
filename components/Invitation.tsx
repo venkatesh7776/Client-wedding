@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 
 import { Hero } from "./Hero";
 import { Loader } from "./Loader";
+import { VERSE_VIEWBOX } from "./VerseArt";
 import { preloadImages } from "@/lib/preload";
 import { CUE, EASE, startLampDrift } from "@/lib/timeline";
 import { useStageScale } from "@/lib/useStageScale";
@@ -36,6 +37,7 @@ export function Invitation() {
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         release();
+        gsap.set(q("[data-verse-fill]"), { attr: { width: VERSE_VIEWBOX.width } });
         // Land on the finished composition; no motion at all.
         gsap.set(q("[data-loader]"), { autoAlpha: 0, display: "none" });
         gsap.set(q("[data-hero-bg]"), { opacity: 1 });
@@ -89,10 +91,11 @@ export function Invitation() {
       );
 
       /* ---- Then the gold fills them, left to right: the loading itself ---- */
-      tl.to(
+      tl.fromTo(
         q("[data-verse-fill]"),
+        { attr: { width: 0 } },
         {
-          clipPath: "inset(0 0% 0 0)",
+          attr: { width: VERSE_VIEWBOX.width },
           duration: CUE.verseFillDuration,
           ease: "none",
         },

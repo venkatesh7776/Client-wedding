@@ -25,8 +25,6 @@ export const ASSETS = {
   rsvpScene: "/assets/images/RSVP.png",
   /** Cover that splits open over each celebration card — 478x553 */
   thumbnail: "/assets/images/thumbnail.png",
-  /** Loader verse artwork — 522.948x121.013, used as a mask so it can fill */
-  verse: "/assets/icons/verse.svg",
   /** Rule to the left of the ampersand — 155px */
   dividerLeft: "/assets/icons/divider-left.svg",
   /** Rule to the right of the ampersand — 171px */

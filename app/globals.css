@@ -108,27 +108,15 @@ html.is-holding body {
   text-align: center;
 }
 
-/* The verse is drawn twice from one mask: white underneath, gold on top. */
-.verse {
-  position: relative;
+/* The verse ships inline in the HTML; this only sizes it. */
+.verse__frame {
   width: min(420px, 72vw); /* Figma draws it at 523px — eased down a little */
-  aspect-ratio: 522.948 / 121.013;
 }
 
-.verse__layer {
-  position: absolute;
-  inset: 0;
-  -webkit-mask: var(--verse) center / contain no-repeat;
-  mask: var(--verse) center / contain no-repeat;
-}
-
-.verse__base { background: var(--color-on-dark); }
-
-/* Gold sweeps in from the left edge. */
-.verse__fill {
-  background: var(--color-gold-loader);
-  clip-path: inset(0 100% 0 0);
-  will-change: clip-path;
+.verse {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .loader__meaning {
@@ -458,7 +446,7 @@ html.is-holding body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .verse__fill { clip-path: inset(0); }
+  [data-verse-fill] { width: 522.948px; }
 }
 
 /* ==========================================================================

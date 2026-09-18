@@ -2,7 +2,7 @@
  * Verbatim copy from the Figma composition. Do not reword.
  */
 export const COPY = {
-  /** Loader verse — Surah An-Naba 78:8, set as artwork in assets/icons/verse.svg */
+  /** Loader verse — Surah An-Naba 78:8, outlines inlined by components/VerseArt.tsx, generated from assets/icons/verse.svg */
   verseMeaning: '"And We created you in pairs."',
   verseReference: "— Surah An-Naba (78:8)",
   /** Bismillah */
