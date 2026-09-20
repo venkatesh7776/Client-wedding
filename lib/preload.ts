@@ -1,5 +1,4 @@
 import { ASSETS } from "./assets";
-import { CELEBRATIONS } from "./celebrations";
 import { VENUES } from "./venues";
 
 /**
@@ -9,9 +8,8 @@ import { VENUES } from "./venues";
  */
 export function imageUrls(): string[] {
   const fromAssets = Object.values(ASSETS).filter((v) => /\.(png|jpe?g|webp|avif)$/i.test(v));
-  const cards = CELEBRATIONS.map((c) => c.art);
   const venues = VENUES.map((v) => v.art);
-  return Array.from(new Set([...fromAssets, ...cards, ...venues]));
+  return Array.from(new Set([...fromAssets, ...venues]));
 }
 
 /**

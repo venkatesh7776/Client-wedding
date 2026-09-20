@@ -7,13 +7,12 @@ import { useGSAP } from "@gsap/react";
 
 import { DRESS_COPY, DRESS_NOTES } from "@/lib/dresscode";
 
+import { EASE, EASE_LINE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
+
 import { Ornament } from "../meet/Ornament";
 import { ArchIcon, GarmentIcon, LanternIcon } from "./DressIcons";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const PLAY_ONCE = "play none none none";
-const EASE = "power2.out";
 
 const ICONS = {
   garment: GarmentIcon,
@@ -35,23 +34,23 @@ export function DressCode() {
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (reducedMotion()) return;
 
       const head = q("[data-dress-head] > *:not([data-ornament])");
       const notes = q("[data-dress-note]");
 
-      gsap.set([head, notes], { opacity: 0, y: 22 });
+      gsap.set([head, notes], { opacity: 0, y: REVEAL.rise });
       gsap.set(q("[data-ornament-rule]"), { opacity: 0, scaleX: 0 });
       gsap.set(q("[data-ornament-star]"), { opacity: 0 });
 
-      gsap
-        .timeline({
-          scrollTrigger: { trigger: root.current, start: "top 78%", toggleActions: PLAY_ONCE },
-        })
-        .to(head, { opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14 }, 0)
-        .to(q("[data-ornament-rule]"), { opacity: 1, scaleX: 1, duration: 0.95, ease: "power2.inOut" }, 0.35)
-        .to(q("[data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.6)
-        .to(notes, { opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.16 }, 0.55);
+      onEnter(q("[data-dress-head]")[0], "top 85%")
+        .to(head, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0)
+        .to(q("[data-ornament-rule]"), { opacity: 1, scaleX: 1, duration: REVEAL.line, ease: EASE_LINE }, 0.35)
+        .to(q("[data-ornament-star]"), { opacity: 1, duration: 0.7 }, 0.6);
+
+      /* the three notes wait for their own row rather than riding the heading */
+      onEnter(q("[data-dress-notes]")[0], "top 84%")
+        .to(notes, { opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE, stagger: 0.18 }, 0);
     },
     { scope: root },
   );
@@ -75,7 +74,7 @@ export function DressCode() {
         </p>
       </header>
 
-      <ul className="dress__notes">
+      <ul className="dress__notes" data-dress-notes>
         {DRESS_NOTES.map((note) => {
           const Icon = ICONS[note.icon];
           return (

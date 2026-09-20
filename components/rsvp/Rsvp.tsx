@@ -6,18 +6,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 import { ASSETS } from "@/lib/assets";
-import { RSVP_COPY, RSVP_FALLBACK, RSVP_URL } from "@/lib/rsvp";
+import { EASE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
+import { RSVP_COPY, RSVP_URL } from "@/lib/rsvp";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const PLAY_ONCE = "play none none none";
-const EASE = "power2.out";
 
 /**
  * Section 6 — the invitation itself.
  *
  * The watercolour mosque stands alone on the ivory, and everything below it is
- * the invitation: who, what, where, and the one thing to do.
+ * the invitation: who it is from, and the one thing to do.
  */
 export function Rsvp() {
   const root = useRef<HTMLElement>(null);
@@ -25,20 +23,23 @@ export function Rsvp() {
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (reducedMotion()) return;
 
       const lines = q("[data-rsvp-line]");
       gsap.set(q("[data-rsvp-scene]"), { opacity: 0, y: 18 });
-      gsap.set(lines, { opacity: 0, y: 22 });
-      gsap.set(q("[data-rsvp-bar]"), { opacity: 0, y: 24 });
+      gsap.set(lines, { opacity: 0, y: REVEAL.rise });
+      gsap.set(q("[data-rsvp-bar]"), { opacity: 0, y: REVEAL.rise });
 
-      gsap
-        .timeline({
-          scrollTrigger: { trigger: root.current, start: "top 78%", toggleActions: PLAY_ONCE },
-        })
-        .to(q("[data-rsvp-scene]"), { opacity: 1, y: 0, duration: 0.9, ease: EASE }, 0)
-        .to(lines, { opacity: 1, y: 0, duration: 0.6, ease: EASE, stagger: 0.1 }, 0.25)
-        .to(q("[data-rsvp-bar]"), { opacity: 1, y: 0, duration: 0.65, ease: EASE }, 0.55);
+      onEnter(q("[data-rsvp-scene]")[0], "top 82%")
+        .to(q("[data-rsvp-scene]"), { opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE }, 0);
+
+      /* the words wait for themselves, not for the scene above them */
+      onEnter(lines[0], "top 86%")
+        .to(lines, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0);
+
+      /* the invitation itself lands last, once the words above it have settled */
+      onEnter(q("[data-rsvp-bar]")[0], "top 90%")
+        .to(q("[data-rsvp-bar]"), { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE }, 0);
     },
     { scope: root },
   );
@@ -63,26 +64,15 @@ export function Rsvp() {
         ))}
       </p>
 
-      <div className="rsvp__bar" data-rsvp-bar>
-        <div className="rsvp__details">
-          <p className="rsvp__occasion">{RSVP_COPY.occasion}</p>
-          <p className="rsvp__meta">
-            <span>{RSVP_COPY.date}</span>
-            <span className="rsvp__dot" aria-hidden>
-              ·
-            </span>
-            <span>{RSVP_COPY.venue}</span>
-          </p>
-        </div>
-
-        <a
-          className="rsvp__cta"
-          href={RSVP_URL ?? RSVP_FALLBACK}
-          {...(RSVP_URL ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-        >
-          {RSVP_COPY.cta}
-        </a>
-      </div>
+      <a
+        className="rsvp__cta"
+        href={RSVP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-rsvp-bar
+      >
+        {RSVP_COPY.cta}
+      </a>
 
     </section>
   );

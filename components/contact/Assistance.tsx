@@ -7,12 +7,11 @@ import { useGSAP } from "@gsap/react";
 
 import { ASSIST_COPY, CONTACTS } from "@/lib/contacts";
 
+import { EASE, EASE_LINE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
+
 import { Ornament, Star } from "../meet/Ornament";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const PLAY_ONCE = "play none none none";
-const EASE = "power2.out";
 
 /** A handset, drawn to match the other line icons on the site. */
 function PhoneIcon({ size = 15 }: { size?: number }) {
@@ -37,24 +36,25 @@ export function Assistance() {
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (reducedMotion()) return;
 
       const head = q("[data-assist-head] > *:not([data-ornament])");
-      gsap.set(head, { opacity: 0, y: 22 });
+      gsap.set(head, { opacity: 0, y: REVEAL.rise });
       gsap.set(q("[data-ornament-rule]"), { opacity: 0, scaleX: 0 });
       gsap.set(q("[data-ornament-star]"), { opacity: 0 });
-      gsap.set(q("[data-assist-card]"), { opacity: 0, y: 24 });
+      gsap.set(q("[data-assist-card]"), { opacity: 0, y: REVEAL.rise });
       gsap.set(q("[data-assist-spine]"), { opacity: 0, scaleY: 0.4 });
 
-      gsap
-        .timeline({
-          scrollTrigger: { trigger: root.current, start: "top 80%", toggleActions: PLAY_ONCE },
-        })
-        .to(head, { opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14 }, 0)
-        .to(q("[data-ornament-rule]"), { opacity: 1, scaleX: 1, duration: 0.95, ease: "power2.inOut" }, 0.35)
-        .to(q("[data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.6)
-        .to(q("[data-assist-card]"), { opacity: 1, y: 0, duration: 1.0, ease: EASE }, 0.5)
-        .to(q("[data-assist-spine]"), { opacity: 1, scaleY: 1, duration: 0.9, ease: "power2.inOut" }, 0.55);
+      onEnter(q("[data-assist-head]")[0], "top 85%")
+        .to(head, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0)
+        .to(q("[data-ornament-rule]"), { opacity: 1, scaleX: 1, duration: REVEAL.line, ease: EASE_LINE }, 0.35)
+        .to(q("[data-ornament-star]"), { opacity: 1, duration: 0.7 }, 0.6);
+
+      onEnter(q("[data-assist-pair]")[0], "top 84%")
+        .to(q("[data-assist-card]"), {
+          opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE, stagger: 0.18,
+        }, 0)
+        .to(q("[data-assist-spine]"), { opacity: 1, scaleY: 1, duration: REVEAL.line, ease: EASE_LINE }, 0.15);
     },
     { scope: root },
   );
@@ -71,7 +71,7 @@ export function Assistance() {
         <Ornament className="assist__ornament" />
       </header>
 
-      <div className="assist__pair">
+      <div className="assist__pair" data-assist-pair>
         <span className="assist__spine" aria-hidden data-assist-spine>
           <span className="assist__spineLine" />
           <span className="assist__spineStar">

@@ -7,10 +7,9 @@ import { useGSAP } from "@gsap/react";
 
 import { ASSETS } from "@/lib/assets";
 import { CLOSING_COPY } from "@/lib/closing";
+import { EASE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const PLAY_ONCE = "play none none none";
 
 /**
  * Section 9 — the last word.
@@ -24,21 +23,18 @@ export function Closing() {
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (reducedMotion()) return;
 
-      gsap.set(q("[data-closing-line]"), { opacity: 0, y: 22 });
+      gsap.set(q("[data-closing-line]"), { opacity: 0, y: REVEAL.rise });
 
-      gsap
-        .timeline({
-          scrollTrigger: { trigger: root.current, start: "top 80%", toggleActions: PLAY_ONCE },
-        })
-        .to(q("[data-closing-line]"), {
-          opacity: 1,
-          y: 0,
-          duration: 1.1,
-          ease: "power2.out",
-          stagger: 0.24,
-        });
+      /* the last words of the page take their time */
+      onEnter(q("[data-closing-inner]")[0], "top 84%").to(q("[data-closing-line]"), {
+        opacity: 1,
+        y: 0,
+        duration: REVEAL.frame + 0.2,
+        ease: EASE,
+        stagger: 0.3,
+      });
     },
     { scope: root },
   );
@@ -50,7 +46,7 @@ export function Closing() {
         <span className="farewell__scrim" />
       </div>
 
-      <div className="farewell__inner">
+      <div className="farewell__inner" data-closing-inner>
         <p className="farewell__gratitude" data-closing-line>
           {CLOSING_COPY.gratitude}
         </p>

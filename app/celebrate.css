@@ -104,167 +104,231 @@
 
 .celebrate__ornament { margin-top: clamp(20px, 2.4vw, 30px); }
 
-/* ---------- Timeline ---------- */
+/* ---------- The rail ---------- */
 
-.timeline {
+/*
+ * One row of cards on every screen. The rail is simply narrower on a phone, so
+ * the next card shows at the edge and the gesture explains itself — no arrows,
+ * no dots. The fades at either end are the only hint that it moves.
+ */
+.rail {
   position: relative;
-  max-width: 1000px;
-  margin: clamp(52px, 6vw, 84px) auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(30px, 3.4vw, 48px);
+  margin: clamp(40px, 4.6vw, 64px) 0 0;
 }
 
-.timeline__spine {
+.rail__track {
+  --rail-gap: clamp(20px, 8vw, 140px);
+  --rail-padTop: 6px;
+  --rail-padBottom: 14px;
+  position: relative;
+  z-index: 1; /* the cards cover the connecting line */
+  display: flex;
+  /* generous gaps and gutters, so the row is wider than the screen and the
+     pinned travel has somewhere to go */
+  justify-content: flex-start;
+  gap: var(--rail-gap);
+  padding: var(--rail-padTop) 0 var(--rail-padBottom) clamp(20px, 18vw, 260px);
+  /* real horizontal scrolling on every screen — the pinned timeline moves it
+     on a wide one, a thumb or trackpad on any */
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+/*
+ * The connecting line. It is pinned to the rail rather than the moving track,
+ * so it stays level as the row travels; the card faces are opaque, so the line
+ * reads as a thread running from one celebration to the next.
+ */
+.rail__line {
   position: absolute;
   top: 6px;
-  bottom: 6px;
-  left: 50%;
-  width: 1px;
-  margin-left: -0.5px;
-  background: color-mix(in srgb, var(--color-gold) 26%, transparent);
-}
-
-.timeline__spineFill {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--color-gold) 8%,
-    var(--color-gold) 92%,
-    transparent
-  );
-}
-
-.event {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-}
-
-.event--left > .event__card {
-  grid-column: 1;
-  justify-self: end;
-  margin-right: clamp(26px, 3.2vw, 48px);
-}
-
-.event--right > .event__card {
-  grid-column: 2;
-  justify-self: start;
-  margin-left: clamp(26px, 3.2vw, 48px);
-}
-
-/* star sitting on the spine, level with its tablet */
-.event__node {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  margin: -14px 0 0 -14px;
-  border-radius: 50%;
-  background: var(--color-sand);
-  color: var(--color-gold);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-gold) 42%, transparent);
-}
-
-/* ---------- The tablet: finished artwork with a text panel ---------- */
-
-.event__card {
-  position: relative;
-  overflow: hidden;
-  width: min(100%, 370px);
-  aspect-ratio: 956 / 1106;
-  filter: drop-shadow(0 18px 26px rgba(164, 134, 92, 0.26));
-}
-
-.event__art {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* the blank panel inside the frame, measured from the artwork */
-.event__plate {
-  position: absolute;
-  top: 47.9%;
-  right: 7.3%;
-  bottom: 8.1%;
-  left: 7.3%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 clamp(6px, 1.4vw, 14px);
-  text-align: center;
-}
-
-.event__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 400;
-  font-size: clamp(22px, 2.1vw, 28px);
-  line-height: 1.12;
-  letter-spacing: 0.005em;
-  color: var(--color-ink);
-}
-
-.event__titleNum { color: inherit; }
-
-.event__titleDot {
-  margin: 0 0.3em;
-  color: var(--color-gold);
-}
-
-/* ---------- Cover ---------- */
-
-.event__cover {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  overflow: hidden;
+  right: 0;
+  bottom: 14px;
+  left: 0;
+  z-index: 0;
   pointer-events: none;
 }
 
-.event__coverHalf {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 50.2%; /* a hair over half, so no hairline shows down the middle */
-  overflow: hidden;
-  will-change: transform;
-}
-
-.event__coverHalf img {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 200%;
-  object-fit: cover;
-}
-
-/* the two halves together read as one picture */
-.event__coverHalf--top { top: 0; }
-.event__coverHalf--top img { top: 0; }
-
-.event__coverHalf--bottom { bottom: 0; }
-.event__coverHalf--bottom img { bottom: 0; }
-
-/* a thin gold line along the cut */
-.event__coverSeam {
+.rail__line::before {
+  content: "";
   position: absolute;
   top: 50%;
-  left: 0;
   right: 0;
+  left: 0;
   height: 1px;
-  margin-top: -0.5px;
-  background: linear-gradient(to right, transparent, rgba(216, 188, 134, 0.85), transparent);
+  background: color-mix(in srgb, var(--color-gold) 46%, transparent);
+}
+
+/* a gem where the line crosses each gap */
+.rail__item::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(var(--rail-gap) / -2 - 3px);
+  width: 6px;
+  height: 6px;
+  background: color-mix(in srgb, var(--color-gold) 78%, transparent);
+  transform: translateY(-50%) rotate(45deg);
+}
+.rail__item:last-of-type::after { display: none; }
+
+.rail__pad { flex: 0 0 clamp(20px, 18vw, 260px); }
+
+/* while the pinned timeline drives the row: no snap to fight the scrub, and a
+   sideways finger leaves it alone — an up-or-down one still walks the rail */
+.rail__track--driven {
+  scroll-snap-type: none;
+  touch-action: pan-y;
+  will-change: scroll-position;
+}
+
+/* narrow screens: the row is swiped, and snaps card to card */
+@media (max-width: 860px) {
+  .rail__pad { flex: 0 0 6px; }
+  .rail__item::after { display: none; }
+  .rail__line { top: 6px; bottom: 12px; }
+
+  .rail__track {
+    --rail-gap: 14px;
+    --rail-padBottom: 12px;
+    gap: 14px;
+    padding: 6px 0 12px 20px;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+  }
+  .rail__pad { flex: 0 0 20px; }
+}
+
+.rail__track::-webkit-scrollbar { display: none; }
+
+.rail__item {
+  position: relative;
+  flex: 0 0 clamp(268px, 30vw, 420px);
+  scroll-snap-align: center;
+}
+
+/* a soft edge, so a card cut off by the viewport reads as "more this way" */
+.rail::before,
+.rail::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(28px, 5vw, 64px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rail::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-sand), transparent);
+}
+
+.rail::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-sand), transparent);
+}
+
+/* ---------- A card ---------- */
+
+.event {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: clamp(30px, 3.2vw, 40px) clamp(24px, 2.6vw, 34px) clamp(28px, 3vw, 36px);
+  text-align: center;
+  /* cream paper with the hero's sky pooling in the middle of the face */
+  background:
+    radial-gradient(78% 52% at 50% 50%, color-mix(in srgb, var(--color-sky-top) 78%, transparent), transparent 72%),
+    linear-gradient(to bottom, #fefaf1, color-mix(in srgb, var(--color-stone-light) 42%, #fff));
+  border: 1px solid color-mix(in srgb, var(--color-gold) 52%, transparent);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #fff 70%, transparent),
+    0 24px 36px -30px var(--color-stone-shadow);
+  overflow: hidden;
+}
+
+/* a second hairline, a few px inside the first */
+.event__hairline {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+  pointer-events: none;
+}
+
+/* khatam watermark across the face */
+.event__jali {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 4l5 11 11 5-11 5-5 11-5-11-11-5 11-5z' fill='none' stroke='%23a4865c' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.event__corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 65%, transparent);
+  pointer-events: none;
+}
+.event__corner--tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
+.event__corner--tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; }
+.event__corner--bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; }
+.event__corner--br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
+
+.event > *:not(.event__hairline):not(.event__jali):not(.event__corner) { position: relative; }
+
+/* the illustration stands free on the paper — no niche, no frame */
+.event__crest {
+  display: block;
+  width: clamp(104px, 10.5vw, 134px);
+  height: auto;
+}
+
+.event__title {
+  margin: clamp(16px, 1.8vw, 22px) 0 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(20px, 1.9vw, 25px);
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.event__index { color: var(--color-gold-deep); }
+.event__dot { margin: 0 0.35em; color: var(--color-gold); }
+
+/* rule with a lozenge, as on the venue cards */
+.event__rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 132px;
+  margin: clamp(11px, 1.3vw, 15px) 0 clamp(16px, 1.8vw, 22px);
+  color: var(--color-gold);
+}
+
+.event__ruleLine {
+  flex: 1 1 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+}
+.event__ruleLine:last-of-type { background: linear-gradient(to left, transparent, currentColor); }
+
+.event__ruleGem {
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  transform: rotate(45deg);
 }
 
 /* ---------- Details ---------- */
@@ -272,49 +336,40 @@
 .event__details {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: clamp(9px, 1.1vw, 13px);
   width: 100%;
-  /* space below the title — must come after any `margin` shorthand */
-  margin: clamp(18px, 2.2vw, 28px) 0 0;
-  text-align: left;
+  margin: 0;
+  text-align: center;
 }
 
+/* label and value on one line, the pair centred on the card */
 .event__row {
-  display: grid;
-  grid-template-columns: clamp(84px, 8.6vw, 100px) 1fr;
-  align-items: center;
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px 7px;
 }
+
+.event__row dt::after { content: ":"; }
 
 .event__row dt {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   font-family: var(--font-ui);
   font-variation-settings: "opsz" 14, "wdth" 100;
   font-size: 9.5px;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--color-gold-deep);
 }
 
-.event__rowIcon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  color: var(--color-gold-deep);
-}
-.event__rowIcon svg { width: 14px; height: 14px; }
-
 .event__row dd {
   margin: 0;
-  padding-left: 11px;
-  border-left: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
   font-family: var(--font-ui);
   font-variation-settings: "opsz" 14, "wdth" 100;
-  font-size: clamp(12.5px, 1vw, 14.5px);
-  line-height: 1.3;
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  line-height: 1.4;
+  text-wrap: balance;
   color: var(--color-ink);
 }
 
@@ -353,31 +408,24 @@
 
 .closing__star { margin-top: 20px; display: block; }
 
-/* ---------- Mobile: one column, the spine runs down the left ---------- */
+/* ---------- Mobile: the same rail, showing one card and a glimpse ---------- */
 
 @media (max-width: 860px) {
-  .timeline { gap: 34px; }
+  .rail { margin-top: 32px; }
 
-  .timeline__spine { left: 15px; margin-left: 0; }
-
-  .event { grid-template-columns: 1fr; }
-
-  .event--left > .event__card,
-  .event--right > .event__card {
-    grid-column: 1;
-    justify-self: stretch;
-    width: auto;
-    max-width: 340px;
-    margin: 0 0 0 42px;
+  .rail__track {
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 6px 20px 12px;
+    scroll-padding-inline: 20px;
   }
 
-  .event__node {
-    top: 34px;
-    left: 15px;
-    width: 26px;
-    height: 26px;
-    margin: -13px 0 0 -13px;
+  /* 78vw leaves the next card showing at the edge */
+  .rail__item {
+    flex: 0 0 78vw;
+    max-width: 320px;
+    scroll-snap-align: center;
   }
 
-  .event__row { grid-template-columns: 92px 1fr; gap: 10px; }
+  .event { padding: 26px 20px 24px; }
 }

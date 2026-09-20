@@ -8,6 +8,8 @@ import { useGSAP } from "@gsap/react";
 import { ASSETS } from "@/lib/assets";
 import { VENUES, VENUE_COPY } from "@/lib/venues";
 
+import { EASE, EASE_LINE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
+
 import { Ornament } from "../meet/Ornament";
 import { VENUE_ARCH } from "./arch";
 import { Countdown } from "./Countdown";
@@ -21,9 +23,6 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
  * is being iterated over, which throws if the page is reloaded already
  * scrolled into the section. These play once and simply stay alive.
  */
-const PLAY_ONCE = "play none none none";
-
-const EASE = "power2.out";
 
 /**
  * Section 4 — Venues & Directions.
@@ -38,7 +37,7 @@ export function Venues() {
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (reducedMotion()) return;
 
       const head = q("[data-venues-head] > *:not([data-ornament])");
       const rules = q("[data-ornament-rule]");
@@ -48,26 +47,39 @@ export function Venues() {
       gsap.set(head, { opacity: 0, y: 26 });
       gsap.set(rules, { opacity: 0, scaleX: 0 });
       gsap.set(stars, { opacity: 0 });
-      gsap.set(q("[data-venue]"), { opacity: 0, y: 34 });
+      gsap.set(q("[data-venue]"), { opacity: 0, y: REVEAL.rise + 8 });
       gsap.set(q("[data-venue-divider]"), { opacity: 0, scaleX: 0.4 });
       gsap.set(q("[data-venue-cta]"), { opacity: 0, y: 12 });
       gsap.set(q("[data-countdown]"), { opacity: 0, y: 20 });
 
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: root.current, start: "top 72%", toggleActions: PLAY_ONCE },
+      /* the backdrop washes in first, behind everything */
+      onEnter(root.current ?? undefined, "top 75%")
+        .to(q("[data-venues-bg]"), { opacity: 1, duration: REVEAL.wash, ease: "power1.out" }, 0);
+
+      onEnter(q("[data-venues-head]")[0], "top 85%")
+        .to(head, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0)
+        .to(rules, { opacity: 1, scaleX: 1, duration: REVEAL.line, ease: EASE_LINE }, 0.35)
+        .to(stars, { opacity: 1, duration: 0.7, ease: EASE }, 0.6);
+
+      /*
+       * Each card waits for itself. Side by side they share a line, so they
+       * still arrive together — stacked on a phone, the second one gets its
+       * own moment instead of having played while it was still below.
+       * A card and everything on it always arrive as one, never in sequence.
+       */
+      q("[data-venue]").forEach((card) => {
+        onEnter(card, "top 84%")
+          .to(card, { opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE }, 0)
+          .to(card.querySelectorAll("[data-venue-divider]"), {
+            opacity: 1, scaleX: 1, duration: REVEAL.line, ease: EASE_LINE,
+          }, 0.2)
+          .to(card.querySelectorAll("[data-venue-cta]"), {
+            opacity: 1, y: 0, duration: REVEAL.line, ease: EASE,
+          }, 0.35);
       });
 
-      tl.to(q("[data-venues-bg]"), { opacity: 1, duration: 1.4, ease: "power1.out" }, 0)
-        .to(head, { opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14 }, 0.15)
-        .to(rules, { opacity: 1, scaleX: 1, duration: 0.95, ease: "power2.inOut" }, 0.45)
-        .to(stars, { opacity: 1, duration: 0.65, ease: EASE }, 0.65)
-        // both cards and everything on them arrive together, not in sequence
-        .to(q("[data-venue]"), { opacity: 1, y: 0, duration: 1.05, ease: EASE }, 0.45)
-        .to(q("[data-venue-divider]"), {
-          opacity: 1, scaleX: 1, duration: 0.9, ease: "power2.inOut",
-        }, 0.45)
-        .to(q("[data-venue-cta]"), { opacity: 1, y: 0, duration: 0.9, ease: EASE }, 0.45)
-        .to(q("[data-countdown]"), { opacity: 1, y: 0, duration: 1.0, ease: EASE }, 0.8);
+      onEnter(q("[data-countdown]")[0], "top 88%")
+        .to(q("[data-countdown]"), { opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE }, 0);
     },
     { scope: root },
   );

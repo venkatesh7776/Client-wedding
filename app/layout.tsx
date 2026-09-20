@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Amiri, Arbutus, Bricolage_Grotesque, Instrument_Serif } from "next/font/google";
+import {
+  Amiri,
+  Arbutus,
+  Bricolage_Grotesque,
+  Playfair_Display,
+  Instrument_Serif,
+} from "next/font/google";
 
 import "./globals.css";
 import "./meet.css";
@@ -10,6 +16,7 @@ import "./rsvp.css";
 import "./message.css";
 import "./contact.css";
 import "./closing.css";
+import "./lanterns.css";
 
 const instrument = Instrument_Serif({
   weight: "400",
@@ -30,6 +37,21 @@ const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   axes: ["opsz", "wdth"],
   variable: "--font-bricolage",
+  display: "swap",
+});
+
+/**
+ * The couple's names, wherever they appear.
+ *
+ * Playfair Display regular: high-contrast and formal like DM Serif, but a good
+ * deal lighter at these sizes. It is a variable font, so the weight can be
+ * tuned here without loading another cut.
+ */
+const nameFace = Playfair_Display({
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-names-face",
   display: "swap",
 });
 
@@ -57,7 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${instrument.variable} ${arbutus.variable} ${bricolage.variable} ${amiri.variable}`}
+      className={`${instrument.variable} ${arbutus.variable} ${bricolage.variable} ${amiri.variable} ${nameFace.variable}`}
     >
       <head>
         {/* The palace has to be decoded before the ring lands at 2.8s. */}

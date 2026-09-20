@@ -23,8 +23,10 @@ export const ASSETS = {
   messageBackground: "/assets/images/VENU%20section7.png",
   /** Watercolour mosque for the invitation — 3356x1874, transparent */
   rsvpScene: "/assets/images/RSVP.png",
-  /** Cover that splits open over each celebration card — 478x553 */
-  thumbnail: "/assets/images/thumbnail.png",
+  /** Celebration illustrations — inked, transparent, 360px wide */
+  celebrationMehandi: "/assets/images/celebration-mehandi.png",
+  celebrationNikkah: "/assets/images/celebration-nikkah.png",
+  celebrationReception: "/assets/images/celebration-reception.png",
   /** Rule to the left of the ampersand — 155px */
   dividerLeft: "/assets/icons/divider-left.svg",
   /** Rule to the right of the ampersand — 171px */

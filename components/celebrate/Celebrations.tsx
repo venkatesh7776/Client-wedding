@@ -6,118 +6,125 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 import { CELEBRATIONS, CELEBRATION_COPY } from "@/lib/celebrations";
+import { EASE, EASE_LINE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
 
 import { Crescent, Ornament, Star } from "../meet/Ornament";
 import { EventCard } from "./EventCard";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-/*
- * `toggleActions: "play none none none"` rather than `once: true`: a trigger
- * that kills itself during ScrollTrigger's first refresh mutates the list it
- * is being iterated over, which throws if the page is reloaded already
- * scrolled into the section. These play once and simply stay alive.
+// a phone's address bar sliding away is not a layout change worth re-pinning for
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+/**
+ * Section 3 — The Wedding Celebrations.
+ *
+ * Three cards of one shape on a rail. On a wide screen the section pins and
+ * the row travels sideways as you scroll down; on a phone the same row is
+ * swiped by hand, with the next card peeking in so the gesture explains
+ * itself — no arrows, no dots.
  */
-const PLAY_ONCE = "play none none none";
-
-const EASE = "power2.out";
-const EASE_LINE = "power2.inOut";
-
 export function Celebrations() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        // no split — the covers simply are not shown
-        gsap.set(q("[data-cover]"), { display: "none" });
-        return;
-      }
+      if (reducedMotion()) return;
 
       const head = q("[data-celebrate-head] > *:not([data-ornament])");
-      const rules = q("[data-ornament-rule]");
-      const stars = q("[data-ornament-star]");
-      const cards = q("[data-event-card]");
-      const nodes = q("[data-event-node]");
+      const cards = q(".rail__item"); // the card and the gem beside it, together
       const closing = q("[data-closing] > *");
 
-      gsap.set([head, cards, closing], { opacity: 0, y: 26 });
-      gsap.set(rules, { opacity: 0, scaleX: 0 });
-      gsap.set(stars, { opacity: 0 });
-      gsap.set(nodes, { opacity: 0, scale: 0.4 });
-      gsap.set(q("[data-spine]"), { scaleY: 0, transformOrigin: "50% 0%" });
+      gsap.set([head, cards, closing], { opacity: 0, y: REVEAL.rise });
+      gsap.set(q("[data-ornament-rule]"), { opacity: 0, scaleX: 0 });
+      gsap.set(q("[data-ornament-star]"), { opacity: 0 });
 
-      const enter = (trigger: Element | undefined, start = "top 80%") =>
-        gsap.timeline(
-          trigger
-            ? { scrollTrigger: { trigger, start, toggleActions: PLAY_ONCE } }
-            : {},
+      onEnter(q("[data-celebrate-head]")[0], "top 85%")
+        .to(head, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0)
+        .to(q("[data-celebrate-head] [data-ornament-rule]"), {
+          opacity: 1, scaleX: 1, duration: REVEAL.line, ease: EASE_LINE,
+        }, 0.35)
+        .to(q("[data-celebrate-head] [data-ornament-star]"), { opacity: 1, duration: 0.7 }, 0.6);
+
+      gsap.set(q("[data-rail-line]"), { opacity: 0, scaleX: 0, transformOrigin: "left center" });
+
+      onEnter(q("[data-rail]")[0], "top 82%")
+        .to(q("[data-rail-line]"), { opacity: 1, scaleX: 1, duration: 1.5, ease: EASE_LINE }, 0)
+        .to(cards, { opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE, stagger: REVEAL.stagger }, 0.1);
+
+      /*
+       * On every screen the section holds still while the row travels sideways,
+       * so scrolling down walks through the celebrations one at a time.
+       *
+       * The travel is real scrolling, not a transform on the track. That way
+       * the row stays reachable by hand — by thumb, by trackpad, by keyboard,
+       * and when a guest has "reduce motion" on and this never runs at all.
+       */
+      let unpin: (() => void) | undefined;
+
+      const walkTheRail = () => {
+        const stage = q("[data-stage]")[0] as HTMLElement | undefined;
+        const track = q("[data-track]")[0] as HTMLElement | undefined;
+        if (!stage || !track) return;
+
+        const distance = () => Math.max(0, track.scrollWidth - track.clientWidth);
+
+        // on a screen wide enough to hold the whole row, there is nothing to
+        // travel — leave the section unpinned rather than holding it still
+        if (distance() < 24) return;
+
+        // the timeline owns the sideways travel now: no snapping to fight the
+        // scrub, and a sideways finger should not wrestle it either
+        track.classList.add("rail__track--driven");
+
+        const reader = { x: 0 };
+        const tween = gsap.fromTo(
+          reader,
+          { x: 0 },
+          {
+            x: () => distance(),
+            ease: "none",
+            immediateRender: false,
+            onUpdate: () => {
+              track.scrollLeft = reader.x;
+            },
+            scrollTrigger: {
+              trigger: stage,
+              // centred when it fits, top-aligned when it is taller than the
+              // screen, so the title is never the part that gets cut off
+              start: () =>
+                stage.offsetHeight > window.innerHeight * 0.94 ? "top top" : "center center",
+              // a short beat once the row has arrived, then the section releases
+              end: () => `+=${distance() + window.innerHeight * 0.2}`,
+              pin: true,
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+              anticipatePin: 1,
+            },
+          },
         );
 
-      /* Heading */
-      enter(q("[data-celebrate-head]")[0], "top 85%")
-        .to(head, { opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14 }, 0)
-        .to(q("[data-celebrate-head] [data-ornament-rule]"), {
-          opacity: 1, scaleX: 1, duration: 0.95, ease: EASE_LINE,
-        }, 0.35)
-        .to(q("[data-celebrate-head] [data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.6);
+        unpin = () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          track.classList.remove("rail__track--driven");
+          track.scrollLeft = 0;
+        };
+      };
 
-      /* The spine draws itself as the timeline scrolls past. */
-      if (q("[data-timeline]")[0]) gsap.to(q("[data-spine]"), {
-        scaleY: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: q("[data-timeline]")[0],
-          start: "top 72%",
-          end: "bottom 78%",
-          scrub: 0.6,
-        },
-      });
+      walkTheRail();
 
-      /* Each celebration: its star lights, the panel settles in, then the
-         cover parts down the middle to reveal it. */
-      CELEBRATIONS.forEach((c) => {
-        const at = (sel: string) => q(`[data-event="${c.index}"] ${sel}`);
-        const card = at("[data-event-card]");
-        const node = at("[data-event-node]");
-        const cover = at("[data-cover]");
-        const top = at("[data-cover-top]");
-        const bottom = at("[data-cover-bottom]");
-        const seam = at("[data-cover] .event__coverSeam");
+      onEnter(q("[data-closing]")[0], "top 85%")
+        .to(closing, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: 0.18 }, 0);
 
-        // the cover parts the moment the card enters — the split is the reveal
-        enter(q(`[data-event="${c.index}"]`)[0], "top 82%")
-          .to(node, { opacity: 1, scale: 1, duration: 0.7, ease: EASE }, 0)
-          .to(card, { opacity: 1, y: 0, duration: 0.85, ease: EASE }, 0)
-          .to(seam, { opacity: 0, duration: 0.4, ease: "none" }, 0)
-          .to(top, { yPercent: -101, duration: 1.05, ease: EASE_LINE }, 0)
-          .to(bottom, { yPercent: 101, duration: 1.05, ease: EASE_LINE }, 0)
-          .set(cover, { display: "none" });
-      });
-
-      /* Closing */
-      enter(q("[data-closing]")[0], "top 85%")
-        .to(closing, { opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.16 }, 0);
+      return () => unpin?.();
     },
     { scope: root },
   );
 
   return (
     <section className="celebrate" ref={root} aria-labelledby="celebrate-title">
-      {/* The arch that frames every niche, defined once. */}
-      <svg className="celebrate__defs" aria-hidden focusable="false">
-        <defs>
-          {/* the tablet's own outline */}
-          <clipPath id="archCard" clipPathUnits="objectBoundingBox">
-            <path d="M0,1 V0.20 C0,0.12 0.07,0.068 0.20,0.046 C0.33,0.024 0.44,0.018 0.5,0 C0.56,0.018 0.67,0.024 0.80,0.046 C0.93,0.068 1,0.12 1,0.20 V1 Z" />
-          </clipPath>
-          <clipPath id="archNiche" clipPathUnits="objectBoundingBox">
-            <path d="M0,1 V0.42 C0,0.2 0.2,0.06 0.46,0.016 C0.48,0.012 0.49,0.006 0.5,0 C0.51,0.006 0.52,0.012 0.54,0.016 C0.8,0.06 1,0.2 1,0.42 V1 Z" />
-          </clipPath>
-        </defs>
-      </svg>
-
       <div className="celebrate__backdrop" aria-hidden>
         <div className="celebrate__lattice" />
       </div>
@@ -133,22 +140,33 @@ export function Celebrations() {
         <span className="celebrate__thresholdRule" />
       </div>
 
-      <header className="celebrate__head" data-celebrate-head>
-        <h2 className="celebrate__title" id="celebrate-title">
-          {CELEBRATION_COPY.title}
-        </h2>
-        <p className="celebrate__lede">{CELEBRATION_COPY.lede}</p>
-        <Ornament className="celebrate__ornament" />
-      </header>
+      {/* heading and rail are pinned together, so the title stays over the
+          cards the whole way along instead of sliding off the top */}
+      <div className="celebrate__stage" data-stage>
+        <header className="celebrate__head" data-celebrate-head>
+          <h2 className="celebrate__title" id="celebrate-title">
+            {CELEBRATION_COPY.title}
+          </h2>
+          <p className="celebrate__lede">{CELEBRATION_COPY.lede}</p>
+          <Ornament className="celebrate__ornament" />
+        </header>
 
-      <div className="timeline" data-timeline>
-        <span className="timeline__spine" aria-hidden>
-          <span className="timeline__spineFill" data-spine />
-        </span>
+        {/* the rail: one row, scrolled by hand on any screen */}
+        <div className="rail" data-rail>
+          {/* the thread the celebrations are strung on: it runs the width of
+              the rail and shows only in the gaps, since the cards are opaque */}
+          <span className="rail__line" aria-hidden data-rail-line />
 
-        {CELEBRATIONS.map((c, i) => (
-          <EventCard key={c.index} event={c} side={i % 2 === 0 ? "left" : "right"} />
-        ))}
+          <div className="rail__track" role="list" data-track>
+            {CELEBRATIONS.map((c) => (
+              <div className="rail__item" role="listitem" key={c.index}>
+                <EventCard event={c} />
+              </div>
+            ))}
+            {/* trailing gutter: padding alone is not counted in scrollWidth */}
+            <span className="rail__pad" aria-hidden />
+          </div>
+        </div>
       </div>
 
       <footer className="closing" data-closing>

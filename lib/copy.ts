@@ -2,8 +2,15 @@
  * Verbatim copy from the Figma composition. Do not reword.
  */
 export const COPY = {
-  /** Loader verse — Surah An-Naba 78:8, outlines inlined by components/VerseArt.tsx, generated from assets/icons/verse.svg */
-  verseMeaning: '"And We created you in pairs."',
+  /**
+   * Loader verse — Surah An-Naba 78:8, set in Amiri.
+   *
+   * Quotation marks are direction-neutral, so in this right-to-left line the
+   * first character is laid out on the right. They are written here in the
+   * order that puts the right curl on the right and the left curl on the left.
+   */
+  verse: "\u201dوَخَلَقْنَاكُمْ أَزْوَاجًا\u201c",
+  verseMeaning: "\u201cAnd We created you in pairs.\u201d",
   verseReference: "— Surah An-Naba (78:8)",
   /** Bismillah */
   bismillah:

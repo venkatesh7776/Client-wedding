@@ -60,6 +60,7 @@
 .farewell__gratitude {
   margin: 0;
   max-width: 620px;
+  font-style: italic;
   font-family: var(--font-ui);
   font-variation-settings: "opsz" 14, "wdth" 100;
   font-size: 18px;

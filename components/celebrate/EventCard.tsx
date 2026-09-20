@@ -1,66 +1,53 @@
-import { ASSETS } from "@/lib/assets";
-import type { Celebration, Detail } from "@/lib/celebrations";
-
-import { Star } from "../meet/Ornament";
-import { CalendarIcon, ClockIcon, PinIcon, RingsIcon } from "./Icons";
-
-function iconFor(label: Detail["label"]) {
-  if (label === "Date") return <CalendarIcon />;
-  if (label === "Time") return <ClockIcon />;
-  if (label === "Location") return <PinIcon />;
-  return <RingsIcon />;
-}
+import type { Celebration } from "@/lib/celebrations";
 
 /**
- * One celebration. The card itself is finished artwork — frame, photograph and
- * all — with a blank panel across its lower half. The text is laid into that
- * panel, whose bounds were measured from the art: it starts 47.9% down and is
- * inset 7.3% either side.
+ * One celebration, in the same stationery language as the venue cards: a gold
+ * frame with a second hairline inside it, the inked illustration standing free
+ * at its head, then the details as label-and-value on one line each.
  */
-export function EventCard({ event, side }: { event: Celebration; side: "left" | "right" }) {
+export function EventCard({ event }: { event: Celebration }) {
+  const rows: [string, string][] = [
+    ["Date", event.date],
+    ["Time", event.time],
+    ...(event.note ? ([["Nikkah", event.note.replace("Nikkah at ", "")]] as [string, string][]) : []),
+    ["Venue", event.venue],
+  ];
+
   return (
-    <article className={`event event--${side}`} data-event={event.index}>
-      <span className="event__node" aria-hidden data-event-node>
-        <Star size={14} />
+    <article className="event" data-event={event.index} data-event-card>
+      <span className="event__hairline" aria-hidden />
+      <span className="event__jali" aria-hidden />
+
+      <span className="event__corner event__corner--tl" aria-hidden />
+      <span className="event__corner event__corner--tr" aria-hidden />
+      <span className="event__corner event__corner--bl" aria-hidden />
+      <span className="event__corner event__corner--br" aria-hidden />
+
+      {/* decorative: the title beneath it already names the celebration */}
+      <img className="event__crest" src={event.icon} alt="" aria-hidden />
+
+      <h3 className="event__title">
+        <span className="event__index">{event.index}</span>
+        <span className="event__dot" aria-hidden>
+          ·
+        </span>
+        {event.title}
+      </h3>
+
+      <span className="event__rule" aria-hidden>
+        <span className="event__ruleLine" />
+        <span className="event__ruleGem" />
+        <span className="event__ruleLine" />
       </span>
 
-      <div className="event__card" data-event-card>
-        <img className="event__art" src={event.art} alt="" aria-hidden />
-
-        {/* Cover: sits over the card, then parts down the middle — the top half
-            lifts away, the bottom half drops — to reveal the celebration. */}
-        <div className="event__cover" data-cover aria-hidden>
-          <span className="event__coverHalf event__coverHalf--top" data-cover-top>
-            <img src={ASSETS.thumbnail} alt="" />
-          </span>
-          <span className="event__coverHalf event__coverHalf--bottom" data-cover-bottom>
-            <img src={ASSETS.thumbnail} alt="" />
-          </span>
-          <span className="event__coverSeam" />
-        </div>
-
-        <div className="event__plate">
-          <h3 className="event__title">
-            <span className="event__titleNum">{event.index}</span>
-            <span className="event__titleDot" aria-hidden>
-              ·
-            </span>
-            {event.title}
-          </h3>
-
-          <dl className="event__details">
-            {event.details.map((d) => (
-              <div className="event__row" key={d.label}>
-                <dt>
-                  <span className="event__rowIcon">{iconFor(d.label)}</span>
-                  {d.label}
-                </dt>
-                <dd>{d.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
+      <dl className="event__details">
+        {rows.map(([label, value]) => (
+          <div className="event__row" key={label}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
     </article>
   );
 }

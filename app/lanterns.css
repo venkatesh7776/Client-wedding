@@ -1,0 +1,101 @@
+/* ==========================================================================
+   THE FLOATING LANTERNS
+   One layer for the whole page, fixed to the viewport, so the lanterns belong
+   to the room rather than to any section. They drift down the screen as the
+   invitation is read and keep swinging when it is still.
+
+   They live in the margins either side of the text column and take no clicks,
+   so nothing they pass is ever in their way.
+   ========================================================================== */
+
+.lanterns {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  /* they light up once the hero has finished unveiling itself, not over it */
+  opacity: 1;
+  transition: opacity 1.6s ease 0.6s;
+}
+
+html.is-holding .lanterns {
+  opacity: 0;
+  transition: none;
+}
+
+.lantern {
+  position: absolute;
+  top: 0;
+  width: var(--lantern-w);
+  /* the element's own opacity is the page script's, for stepping out of the
+     way of whatever passes beneath — the lantern's own level lives inside */
+  will-change: transform, opacity;
+}
+
+.lantern--left {
+  left: 0;
+}
+.lantern--right {
+  right: 0;
+}
+
+/* Three sizes, so the same drawing never reads as the same lantern twice —
+   and all of them narrow enough to stay inside the page's margins. */
+.lantern--1 {
+  --lantern-w: clamp(38px, 3.4vw, 52px);
+  --lantern-o: 0.52;
+}
+.lantern--2 {
+  --lantern-w: clamp(32px, 2.9vw, 44px);
+  --lantern-o: 0.46;
+}
+.lantern--3 {
+  --lantern-w: clamp(26px, 2.3vw, 36px);
+  --lantern-o: 0.4;
+}
+
+.lantern__hang {
+  display: block;
+  /* the lantern's own level; the element around it carries the page script's,
+     for stepping back from whatever passes beneath */
+  opacity: var(--lantern-o);
+  transform-origin: 50% 0%; /* it hangs from its chain, so it swings from there */
+  will-change: transform;
+}
+
+.lantern__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 10px rgba(44, 30, 8, 0.22));
+}
+
+/* the flame, which the page script keeps breathing */
+.lantern__glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0.7;
+}
+
+/* ---------- Phones ----------
+   Two lanterns instead of three, smaller and fainter, hugging the edges with
+   their lane narrowed to a third. A phone has no margin to hide in, so where
+   one does pass a word the page script dips it out of the way. */
+
+@media (max-width: 860px) {
+  .lantern--3 {
+    display: none;
+  }
+
+  .lantern--1 {
+    --lantern-w: 36px;
+    --lantern-o: 0.34;
+    margin-left: -8px;
+  }
+
+  .lantern--2 {
+    --lantern-w: 30px;
+    --lantern-o: 0.3;
+    margin-right: -7px;
+  }
+}

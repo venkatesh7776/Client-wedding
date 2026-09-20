@@ -23,8 +23,8 @@ export const CONTACTS: Contact[] = [
   {
     name: "Anees Ahmed Abdulla",
     role: "Bride’s Brother",
-    display: null,
-    tel: null,
+    display: "+91 73065 16097",
+    tel: "+917306516097",
   },
 ];
 

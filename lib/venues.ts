@@ -36,13 +36,11 @@ export const VENUES: Venue[] = [
     primary: true,
   },
   {
-    // To finish this one: set `name`, fill `address`, and paste the Google
-    // Maps link into `mapUrl`. The button enables itself once mapUrl is set.
     label: "Reception Venue",
     art: "/assets/images/2reception.png",
-    name: null,
-    address: [],
-    mapUrl: null,
+    name: "VMJ Convention Center",
+    address: ["Vattakattupady,", "683542"],
+    mapUrl: "https://maps.google.com/?q=10.100177,76.491241",
     when: "November 10, 2026 · 12:00 PM – 6:00 PM",
   },
 ];

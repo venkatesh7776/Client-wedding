@@ -2,22 +2,25 @@
  * Section 7 — Leave a Message. Copy is as supplied; do not reword.
  */
 export const MESSAGE_COPY = {
-  title: "Leave a Message",
+  title: "Leave a Message for the Couple",
   intro:
-    "Share your blessings, wishes, or a special message for Sahla & Abdul Basith as they begin their journey together.",
-  cardTitle: "Write Your Wishes",
-  nameLabel: "Your Name",
-  messageLabel: "Write a message for the couple...",
+    "If you are unable to join us in person, we would still love to hear from you. Please leave a warm note or a personal message for us below.",
   cta: "Send Your Blessings",
-  sending: "Opening your mail…",
-  sent: "Thank you — your message is ready to send in your mail app.",
-  nameError: "Please add your name.",
-  messageError: "Please write a message.",
 } as const;
 
 /**
- * Where messages go. With no back end, the form hands the note to the guest's
- * own mail app; set an address here and it will be addressed for them.
- * Swapping this for a form endpoint is a change in one place.
+ * Where the button sends guests — a form, if there is one.
+ *
+ * With none set it opens the guest's own mail app with the subject already
+ * written, so the button is never a dead control. Set either of these and it
+ * is used instead; a URL wins over an address.
  */
+export const MESSAGE_URL: string | null =
+  "https://docs.google.com/forms/d/e/1FAIpQLSeCsqDdZ1D6EaJAMoInRK0VN7ofJ_G1DT28YlsB0vm9BDpQ6w/viewform";
 export const MESSAGE_TO: string | null = null;
+
+export const MESSAGE_MAILTO =
+  `mailto:${MESSAGE_TO ?? ""}?subject=` +
+  encodeURIComponent("A message for Sahla & Abdul Basith") +
+  "&body=" +
+  encodeURIComponent("Your message:\n\n— ");

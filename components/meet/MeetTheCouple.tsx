@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-import { BRIDE, FAMILIES, GROOM, SECTION } from "@/lib/family";
+import { BRIDE, GROOM, SECTION } from "@/lib/family";
 
 import { Crescent, Ornament, Star } from "./Ornament";
 import { PersonIntro } from "./PersonIntro";
@@ -29,7 +29,7 @@ const SIDE_BY_SIDE = "(min-width: 700px)";
 const PLAY_ONCE = "play none none none";
 
 const EASE = "power2.out";
-const EASE_ARCH = "power2.inOut";
+const EASE_LINE = "power2.inOut";
 
 export function MeetTheCouple() {
   const root = useRef<HTMLElement>(null);
@@ -53,18 +53,15 @@ export function MeetTheCouple() {
         rules: q("[data-ornament-rule]"),
         stars: q("[data-ornament-star]"),
         arches: q("[data-arch]"),
-        windows: q("[data-arch-window]"),
         info: q("[data-info-line]"),
         center: q("[data-meet-center]"),
-        families: q("[data-families-head] > *:not([data-ornament]), [data-family-col]"),
       };
 
       gsap.set(hidden.backdrop, { opacity: 0 });
-      gsap.set([hidden.heading, hidden.info, hidden.families], { opacity: 0, y: 24 });
+      gsap.set([hidden.heading, hidden.info], { opacity: 0, y: 24 });
       gsap.set(hidden.rules, { opacity: 0, scaleX: 0 });
       gsap.set(hidden.stars, { opacity: 0 });
-      gsap.set(hidden.arches, { clipPath: "inset(100% 0% 0% 0%)", y: 30 });
-      gsap.set(hidden.windows, { opacity: 0, scale: 1.05, transformOrigin: "50% 45%" });
+      gsap.set(hidden.arches, { clipPath: "inset(100% 0% 0% 0%)", y: 26 });
       gsap.set(hidden.center, { opacity: 0, y: 16 });
 
       const onEnter = (trigger: Element | undefined, start = "top 78%") =>
@@ -82,23 +79,21 @@ export function MeetTheCouple() {
           opacity: 1, y: 0, duration: 1.0, ease: EASE, stagger: 0.14,
         }, 0.05)
         .to(q("[data-meet-heading] [data-ornament-rule]"), {
-          opacity: 1, scaleX: 1, duration: 1.0, ease: EASE_ARCH,
+          opacity: 1, scaleX: 1, duration: 1.0, ease: EASE_LINE,
         }, 0.3)
         .to(q("[data-meet-heading] [data-ornament-star]"), { opacity: 1, duration: 0.7, ease: EASE }, 0.6);
 
-      /* 4–10: one person's arch, photograph, then their details */
+      /* the arch rises from its base, then the words inside it settle */
       const person = (tl: gsap.core.Timeline, side: "bride" | "groom", at: number) => {
         const s = (sel: string) => q(`[data-person="${side}"] ${sel}`);
         return tl
           .to(s("[data-arch]"), {
-            clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.25, ease: EASE_ARCH,
+            clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.15, ease: EASE_LINE,
           }, at)
-          // release the clip so the finial and shadow can breathe
-          .set(s("[data-arch]"), { clipPath: "none" }, at + 1.25)
-          .to(s("[data-arch-window]"), { opacity: 1, scale: 1, duration: 1.0, ease: EASE }, at + 0.6)
+          .set(s("[data-arch]"), { clipPath: "none" }, at + 1.15)
           .to(s("[data-info-line]"), {
             opacity: 1, y: 0, duration: 0.85, ease: EASE, stagger: 0.12,
-          }, at + 0.9);
+          }, at + 0.7);
       };
 
       const centreIn = (tl: gsap.core.Timeline, at: number) =>
@@ -122,24 +117,12 @@ export function MeetTheCouple() {
         onEnter(hidden.center[0], "top 88%")
           .to(hidden.center, { opacity: 1, y: 0, duration: 0.9, ease: EASE }, 0)
           .to(q("[data-meet-center] [data-ornament-rule]"), {
-            opacity: 1, scaleX: 1, duration: 0.9, ease: EASE_ARCH,
+            opacity: 1, scaleX: 1, duration: 0.9, ease: EASE_LINE,
           }, 0.15)
           .to(q("[data-meet-center] [data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.4);
         person(onEnter(q('[data-person="groom"]')[0], "top 80%"), "groom", 0);
       });
 
-      /* 11: families, gently staggered */
-      onEnter(q("[data-families]")[0], "top 80%")
-        .to(q("[data-families-head] > *:not([data-ornament])"), {
-          opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.13,
-        }, 0)
-        .to(q("[data-families] [data-ornament-rule]"), {
-          opacity: 1, scaleX: 1, duration: 0.9, ease: EASE_ARCH,
-        }, 0.3)
-        .to(q("[data-families] [data-ornament-star]"), { opacity: 1, duration: 0.65 }, 0.5)
-        .to(q("[data-family-col]"), {
-          opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.16,
-        }, 0.5);
     },
     { scope: root },
   );
@@ -175,28 +158,6 @@ export function MeetTheCouple() {
         <PersonIntro person={GROOM} side="groom" />
       </div>
 
-      <div className="families" data-families>
-        <header className="families__head" data-families-head>
-          <h3 className="families__title">{SECTION.familiesTitle}</h3>
-          <Ornament className="families__ornament" />
-        </header>
-
-        <div className="families__cols">
-          {FAMILIES.map((family) => (
-            <div className="family" key={family.title} data-family-col>
-              <h4 className="family__title">{family.title}</h4>
-              <ul className="family__list">
-                {family.members.map((m) => (
-                  <li className="family__member" key={m.name}>
-                    <span className="family__name">{m.name}</span>
-                    {m.spouse && <span className="family__spouse">Spouse of {m.spouse}</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
