@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { BGM_FADE, BGM_SRC, BGM_VOLUME } from "@/lib/audio";
 
@@ -22,82 +22,103 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
 }
 
 /**
- * What Chrome actually counts as the visitor being here. Scrolling is *not* on
- * the list — the spec grants a page leave to make noise on a press, a tap or a
- * key, and nothing else — so a guest who only ever spins the trackpad would sit
- * in silence if these were all we waited for.
+ * The gestures worth trying a start on. Chrome only counts a press, a tap or a
+ * key as leave to make noise, but scrolling is what a guest does first and a
+ * browser that already trusts the site will accept it, so it is tried too — a
+ * refusal costs nothing now that no single event can spend the only chance.
  */
-const ACTIVATING = ["pointerdown", "pointerup", "mousedown", "touchend", "keydown", "click"] as const;
-
-/**
- * Tried as well, since a browser that already trusts the site will take them,
- * and a scroll is the first thing most guests do. A refusal here costs nothing.
- */
-const OPPORTUNISTIC = ["wheel", "scroll", "touchstart", "touchmove"] as const;
-
-const GESTURES = [...ACTIVATING, ...OPPORTUNISTIC];
+const GESTURES = [
+  "pointerdown", "pointerup", "mousedown", "touchend", "keydown", "click",
+  "wheel", "scroll", "touchstart", "touchmove",
+] as const;
 
 /**
  * The music control, bottom right.
  *
- * It starts on: the track begins with the page and the icon says so. Browsers
- * block unprompted sound, so when the first attempt is refused the control
- * stays lit and the music starts the moment the visitor first presses, taps or
- * types — scrolling does not count, whatever it may look like. Turning it off
- * cancels the wait. The volume eases rather than snapping, and the
- * button removes itself if the track is missing.
+ * It asks to play from the first paint and the icon is lit to say so. Chrome
+ * will refuse until the guest has pressed, tapped or typed something, so the
+ * request stays standing and every gesture is another try, until one is taken.
+ *
+ * Two rules keep it honest. The icon follows the audio element's own play and
+ * pause events, never an assumption about them — so it cannot sit there lit
+ * over silence. And the button reads `el.paused` rather than that icon, so a
+ * click while nothing is playing always starts the music, whatever the icon
+ * happened to be showing.
  */
 export function MusicToggle() {
   const audio = useRef<HTMLAudioElement>(null);
   const fade = useRef<number | null>(null);
-  const [playing, setPlaying] = useState(true);
-  const [available, setAvailable] = useState(true);
-  /* What the visitor has asked for, readable from a listener that was armed
-     before they asked. The off switch sets it, and the waiting gesture obeys. */
+  /** The guest's standing wish, which survives a browser's refusal to honour it. */
   const wanted = useRef(true);
+  const [lit, setLit] = useState(true);
+  const [missing, setMissing] = useState(false);
 
-  const rampTo = (target: number, onDone?: () => void) => {
-    const el = audio.current;
-    if (!el) return;
+  const stopFade = () => {
     if (fade.current) window.clearInterval(fade.current);
-    const step = 40;
-    const delta = (target - el.volume) / ((BGM_FADE * 1000) / step);
-    fade.current = window.setInterval(() => {
-      const next = el.volume + delta;
-      const finished = delta > 0 ? next >= target : next <= target;
-      el.volume = Math.min(1, Math.max(0, finished ? target : next));
-      if (finished) {
-        if (fade.current) window.clearInterval(fade.current);
-        fade.current = null;
-        onDone?.();
-      }
-    }, step);
+    fade.current = null;
   };
 
-  const start = async () => {
+  /**
+   * Eases the volume, and concedes defeat gracefully where it cannot: iOS ignores
+   * writes to `volume` altogether, so the ramp watches whether its own last
+   * write took, and if it did not, finishes at once rather than spinning
+   * forever — which is what used to leave the pause at the end of a fade-out
+   * unreached, and the music unstoppable on an iPhone.
+   */
+  const rampTo = useCallback((target: number, onDone?: () => void) => {
+    const el = audio.current;
+    if (!el) return;
+    stopFade();
+
+    const stepMs = 40;
+    const delta = (target - el.volume) / ((BGM_FADE * 1000) / stepMs);
+    const finish = () => {
+      stopFade();
+      el.volume = target;   // ignored on iOS; correct everywhere else
+      onDone?.();
+    };
+
+    if (!Number.isFinite(delta) || delta === 0) return finish();
+
+    fade.current = window.setInterval(() => {
+      const before = el.volume;
+      const next = Math.min(1, Math.max(0, before + delta));
+      el.volume = next;
+      const moved = Math.abs(el.volume - before) > 0.0005;
+      const arrived = delta > 0 ? next >= target : next <= target;
+      if (arrived || !moved) finish();
+    }, stepMs);
+  }, []);
+
+  /** Asks to play. True only if sound is genuinely coming out afterwards. */
+  const start = useCallback(async () => {
     const el = audio.current;
     if (!el) return false;
     try {
+      stopFade();
       el.volume = 0;
       await el.play();
-      rampTo(BGM_VOLUME);
-      return true;
     } catch {
-      return false;
+      /* Refused (no user gesture yet) or interrupted by a pause. Either way the
+         element itself is the authority on what happened, so fall through. */
     }
-  };
+    if (el.paused) return false;
+    rampTo(BGM_VOLUME);
+    return true;
+  }, [rampTo]);
 
-  /* On by default: play at once, and when Chrome refuses, keep listening and
-     try again on every gesture until one is accepted. The listeners come off
-     only once sound is actually coming out — an earlier version dropped them
-     on the first event it saw, which the opening's own scroll would eat, and
-     then nothing was left to start the music at all. */
+  /* On by default: ask once, and if refused, keep asking on every gesture until
+     one is taken. Gestures aimed at the control itself are left alone — the
+     button's own click would otherwise start the music a moment before the
+     click handler decided to stop it, and the track would blip on and off. */
   useEffect(() => {
     let live = true;
     let trying = false;
 
-    const attempt = () => {
+    const attempt = (event?: Event) => {
       if (!live || trying || !wanted.current) return;
+      const target = event?.target;
+      if (target instanceof Element && target.closest(".music")) return;
       trying = true;
       void start().then((ok) => {
         trying = false;
@@ -108,35 +129,47 @@ export function MusicToggle() {
       GESTURES.forEach((e) => window.addEventListener(e, attempt, { passive: true }));
     const disarm = () => GESTURES.forEach((e) => window.removeEventListener(e, attempt));
 
+    /* Armed before the first try, not after it: the opening attempt has to wait
+       on the network, and a guest who clicks during that wait would otherwise
+       find nothing listening. */
+    arm();
     void start().then((ok) => {
-      if (!ok && live) arm();
+      if (ok) disarm();
     });
 
     return () => {
       live = false;
       disarm();
-      if (fade.current) window.clearInterval(fade.current);
+      stopFade();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [start]);
 
-  const toggle = async () => {
+  /**
+   * The switch. What it does is decided by whether sound is actually playing,
+   * not by what the icon shows — a guest who clicks a lit speaker over silence
+   * means "I want to hear it", and gets exactly that.
+   */
+  const toggle = () => {
     const el = audio.current;
     if (!el) return;
 
-    if (playing) {
-      wanted.current = false;   // and no queued gesture may undo this
+    if (!el.paused) {
+      wanted.current = false;   // no queued gesture may undo this
+      setLit(false);
       rampTo(0, () => el.pause());
-      setPlaying(false);
       return;
     }
 
     wanted.current = true;
-    if (await start()) setPlaying(true);
-    else setAvailable(false);
+    setLit(true);
+    void start();
   };
 
-  if (!available) return null;
+  /* The file is missing or undecodable — the only reason to take the control
+     away. A refused play is not: that is the browser waiting, not a fault. */
+  if (missing) return null;
+
+  const label = lit ? "Turn the music off" : "Play the music";
 
   return (
     <>
@@ -145,17 +178,19 @@ export function MusicToggle() {
         src={BGM_SRC}
         loop
         preload="auto"
-        onError={() => setAvailable(false)}
+        onPlay={() => setLit(wanted.current)}
+        onPause={() => setLit(false)}
+        onError={() => setMissing(true)}
       />
       <button
         type="button"
-        className={`music ${playing ? "music--on" : ""}`}
+        className={`music ${lit ? "music--on" : ""}`}
         onClick={toggle}
-        aria-pressed={playing}
-        aria-label={playing ? "Turn the music off" : "Play the music"}
-        title={playing ? "Turn the music off" : "Play the music"}
+        aria-pressed={lit}
+        aria-label={label}
+        title={label}
       >
-        <SpeakerIcon muted={!playing} />
+        <SpeakerIcon muted={!lit} />
       </button>
     </>
   );
