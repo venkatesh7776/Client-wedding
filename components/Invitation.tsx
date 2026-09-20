@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 
 import { Hero } from "./Hero";
 import { Loader } from "./Loader";
-import { preloadImages } from "@/lib/preload";
+import { preloadHero, preloadRest } from "@/lib/preload";
 import { CUE, EASE, startLampDrift } from "@/lib/timeline";
 import { useStageScale } from "@/lib/useStageScale";
 
@@ -55,16 +55,18 @@ export function Invitation() {
 
       const tl = gsap.timeline({ defaults: { ease: EASE.settle }, onComplete: release });
 
-      /* The loader is also cover for loading: every picture on the page is
-         fetched while the verse fills, and the hand-off to the hero waits for
-         them. Whichever finishes last — the verse or the images — decides. */
+      /* The loader is also cover for loading. The hand-off waits for the few
+         pictures the hero itself paints — whichever finishes last, the verse
+         or those, decides — while everything further down the page fetches in
+         the background, unwatched. Waiting on all of it meant a guest sat in
+         front of a finished loading screen while the footer downloaded. */
       let imagesReady = false;
       let waiting = false;
       const openWhenReady = () => {
         if (imagesReady && waiting) tl.resume();
       };
 
-      preloadImages().then(() => {
+      preloadHero().then(() => {
         imagesReady = true;
         openWhenReady();
       });
@@ -191,6 +193,11 @@ export function Invitation() {
       );
 
       tl.call(release, undefined, CUE.float);
+
+      /* Only now do the pictures further down the page start arriving. Fetched
+         from the first moment instead, tens of megabytes of backdrop nobody is
+         looking at yet saturate the connection and hold up the first screen. */
+      tl.call(preloadRest, undefined, CUE.float);
 
       /* ---- once everything has settled, hint that the page continues ---- */
       tl.call(

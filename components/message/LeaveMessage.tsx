@@ -45,7 +45,7 @@ export function LeaveMessage() {
   return (
     <section className="message" ref={root} aria-labelledby="message-title">
       <div className="message__backdrop" aria-hidden>
-        <img className="message__bgImg" src={ASSETS.messageBackground} alt="" />
+        <img className="message__bgImg" loading="lazy" decoding="async" src={ASSETS.messageBackground} alt="" />
         <span className="message__scrim" />
       </div>
 

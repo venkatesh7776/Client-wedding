@@ -47,7 +47,7 @@ export function Rsvp() {
   return (
     <section className="rsvp" ref={root} aria-labelledby="rsvp-title">
       <div className="rsvp__scene" data-rsvp-scene aria-hidden>
-        <img className="rsvp__sceneImg" src={ASSETS.rsvpScene} alt="" />
+        <img className="rsvp__sceneImg" loading="lazy" decoding="async" src={ASSETS.rsvpScene} alt="" />
       </div>
 
       <p className="rsvp__eyebrow" data-rsvp-line>

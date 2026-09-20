@@ -306,16 +306,16 @@ html.is-holding body {
   font-family: var(--font-names);
   font-style: normal;
   font-weight: 400;
-  font-size: 68px;
-  line-height: 58px;
-  letter-spacing: 0.68px;
+  font-size: 57px;
+  line-height: 50px;
+  letter-spacing: 0.57px;
   text-align: center;
   color: var(--color-ink);
   text-shadow: 1.5px 1.5px 0 var(--color-ink-shadow);
 }
 
-.name--first { height: 52px; }
-.name--last { height: 58px; }
+.name--first { height: 44px; }
+.name--last { height: 49px; }
 
 .amp {
   display: flex;

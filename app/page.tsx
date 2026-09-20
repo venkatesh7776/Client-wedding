@@ -15,7 +15,6 @@ export default function Page() {
     <main>
       {/* one layer for the whole page, above every section and outside them all */}
       <Lanterns />
-      <MusicToggle />
       <Invitation />
       <MeetTheCouple />
       <Celebrations />
@@ -25,6 +24,7 @@ export default function Page() {
       <LeaveMessage />
       <Assistance />
       <Closing />
+      <MusicToggle />
     </main>
   );
 }

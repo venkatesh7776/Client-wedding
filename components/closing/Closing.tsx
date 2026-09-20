@@ -42,7 +42,7 @@ export function Closing() {
   return (
     <section className="farewell" ref={root} aria-label="A closing prayer">
       <div className="farewell__bg" aria-hidden>
-        <img className="farewell__bgImg" src={ASSETS.footerBackground} alt="" />
+        <img className="farewell__bgImg" loading="lazy" decoding="async" src={ASSETS.footerBackground} alt="" />
         <span className="farewell__scrim" />
       </div>
 

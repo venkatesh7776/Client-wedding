@@ -21,22 +21,27 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
   );
 }
 
+/** Events any browser accepts as "the visitor is here", and so as leave to play. */
+const GESTURES = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"] as const;
+
 /**
- * The music control, top right.
+ * The music control, bottom right.
  *
- * Always starts silent — browsers block unprompted sound, and a wedding
- * invitation that blares at you is worse than one that waits. The volume eases
- * rather than snapping, and the button removes itself if the track is missing.
+ * It starts on: the track begins with the page and the icon says so. Browsers
+ * block unprompted sound, so when the first attempt is refused the control
+ * stays lit and the music starts on the visitor's first touch, scroll or key —
+ * the loader gives way to a scroll, so that is usually a moment away. Turning
+ * it off cancels the wait. The volume eases rather than snapping, and the
+ * button removes itself if the track is missing.
  */
 export function MusicToggle() {
   const audio = useRef<HTMLAudioElement>(null);
   const fade = useRef<number | null>(null);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const [available, setAvailable] = useState(true);
-
-  useEffect(() => () => {
-    if (fade.current) window.clearInterval(fade.current);
-  }, []);
+  /* What the visitor has asked for, readable from a listener that was armed
+     before they asked. The off switch sets it, and the waiting gesture obeys. */
+  const wanted = useRef(true);
 
   const rampTo = (target: number, onDone?: () => void) => {
     const el = audio.current;
@@ -56,25 +61,59 @@ export function MusicToggle() {
     }, step);
   };
 
+  const start = async () => {
+    const el = audio.current;
+    if (!el) return false;
+    try {
+      el.volume = 0;
+      await el.play();
+      rampTo(BGM_VOLUME);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  /* On by default — play at once, and if the browser says no, on the first
+     gesture instead. `cancelled` is what the off switch trips. */
+  useEffect(() => {
+    let live = true;
+
+    const onGesture = () => {
+      disarm();
+      if (!live || !wanted.current) return;
+      void start();
+    };
+    const arm = () =>
+      GESTURES.forEach((e) => window.addEventListener(e, onGesture, { passive: true }));
+    const disarm = () => GESTURES.forEach((e) => window.removeEventListener(e, onGesture));
+
+    void start().then((ok) => {
+      if (!ok && live) arm();
+    });
+
+    return () => {
+      live = false;
+      disarm();
+      if (fade.current) window.clearInterval(fade.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const toggle = async () => {
     const el = audio.current;
     if (!el) return;
 
     if (playing) {
+      wanted.current = false;   // and no queued gesture may undo this
       rampTo(0, () => el.pause());
       setPlaying(false);
       return;
     }
 
-    try {
-      el.volume = 0;
-      await el.play();
-      rampTo(BGM_VOLUME);
-      setPlaying(true);
-    } catch {
-      // the browser refused, or there is nothing to play
-      setAvailable(false);
-    }
+    wanted.current = true;
+    if (await start()) setPlaying(true);
+    else setAvailable(false);
   };
 
   if (!available) return null;
@@ -85,7 +124,7 @@ export function MusicToggle() {
         ref={audio}
         src={BGM_SRC}
         loop
-        preload="none"
+        preload="auto"
         onError={() => setAvailable(false)}
       />
       <button

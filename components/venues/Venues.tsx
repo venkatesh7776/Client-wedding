@@ -96,7 +96,7 @@ export function Venues() {
       </svg>
 
       <div className="venues__bg" data-venues-bg aria-hidden>
-        <img className="venues__bgImg" src={ASSETS.venueBackground} alt="" />
+        <img className="venues__bgImg" loading="lazy" decoding="async" src={ASSETS.venueBackground} alt="" />
         <span className="venues__scrim" />
       </div>
 

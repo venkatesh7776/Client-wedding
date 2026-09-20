@@ -2,7 +2,7 @@
    SECTION 2 — MEET THE BRIDE & GROOM
    Same visual world as the hero, one step further in: the courtyard gives way
    to a quiet palace gallery. Stone, gold and foliage tones are sampled from
-   the hero's own art (Pillar.png / lamp.png / hero-background.png).
+   the hero's own art (Pillar.png / lamp.png / hero-background.webp).
    ========================================================================== */
 
 :root {
@@ -11,7 +11,7 @@
   --color-stone: #ead9b0;         /* Pillar.png — light stone */
   --color-stone-mid: #c09e78;     /* Pillar.png — mid stone */
   --color-stone-shadow: #a4865c;  /* Pillar.png — stone in shade */
-  --color-floor: #d2ad8e;         /* hero-background.png — bottom edge */
+  --color-floor: #d2ad8e;         /* hero-background.webp — bottom edge */
   --color-gold: #b08d57;          /* lamp.png brass, muted toward stone */
   --color-gold-deep: #7f5d2b;     /* gold for text — holds contrast on ivory */
 }

@@ -3,16 +3,16 @@
  * File names are the ones already present in the project — do not rename or regenerate them.
  */
 export const ASSETS = {
-  /** Palace / hero background — 1704x923, sits under the sky gradient */
-  heroBackground: "/assets/images/hero-background.png",
-  /** Couple — 1374x1145, cropped into the 371x347 Figma box */
-  couple: "/assets/images/Couple.png",
-  /** Lamp 1 + Lamp 2 share one source — 887x1774 */
-  lamp: "/assets/images/lamp.png",
-  /** Pillar 1 + Pillar 2 share one source — 1024x555 (Pillar 2 is mirrored) */
-  pillar: "/assets/images/Pillar.png",
-  /** Portrait pillar for phones — 877x1792, from Figma "Mobile responsive" (node 84:4) */
-  pillarMobile: "/assets/images/pillar-mobile.png",
+  /** Palace / hero background — 1704x923 WebP, sits under the sky gradient */
+  heroBackground: "/assets/images/hero-background.webp",
+  /** Couple — 1374x1145 WebP, cropped into the 371x347 Figma box */
+  couple: "/assets/images/Couple.webp",
+  /** Lamp 1 + Lamp 2 share one source — 887x1774 WebP */
+  lamp: "/assets/images/lamp.webp",
+  /** Pillar 1 + Pillar 2 share one source — 1024x555 WebP (Pillar 2 is mirrored) */
+  pillar: "/assets/images/Pillar.webp",
+  /** Portrait pillar for phones — 877x1792 WebP, from Figma "Mobile responsive" (node 84:4) */
+  pillarMobile: "/assets/images/pillar-mobile.webp",
   /** Venues & Directions backdrop — 2880x2428, i.e. exactly 2x the 1440x1214 stage */
   venueBackground: "/assets/images/VENUE%20BG%20copy.png",
   /** Loader backdrop — 1665x944 WebP (spaces escaped for the URL) */

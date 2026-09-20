@@ -17,7 +17,7 @@ export function VenueCard({ venue }: { venue: Venue }) {
       className={`venue ${venue.primary ? "venue--primary" : ""} ${pending ? "venue--pending" : ""}`}
       data-venue
     >
-      <img className="venue__art" src={venue.art} alt="" aria-hidden />
+      <img className="venue__art" loading="lazy" decoding="async" src={venue.art} alt="" aria-hidden />
 
       <div className="venue__plate">
         <h3 className="venue__occasion" data-venue-line>

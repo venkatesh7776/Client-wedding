@@ -24,7 +24,7 @@ export function EventCard({ event }: { event: Celebration }) {
       <span className="event__corner event__corner--br" aria-hidden />
 
       {/* decorative: the title beneath it already names the celebration */}
-      <img className="event__crest" src={event.icon} alt="" aria-hidden />
+      <img className="event__crest" loading="lazy" decoding="async" src={event.icon} alt="" aria-hidden />
 
       <h3 className="event__title">
         <span className="event__index">{event.index}</span>

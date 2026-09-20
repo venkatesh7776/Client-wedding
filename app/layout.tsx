@@ -84,9 +84,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* The palace has to be decoded before the ring lands at 2.8s. */}
         <link rel="preload" as="image" href="/assets/images/new%20loader%20bg.webp" />
-        <link rel="preload" as="image" href="/assets/images/hero-background.png" />
+        <link rel="preload" as="image" href="/assets/images/hero-background.webp" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }
