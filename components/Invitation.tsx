@@ -96,6 +96,7 @@ export function Invitation() {
           duration: CUE.enterInDuration,
           ease: EASE.settle,
           pointerEvents: "auto",
+          overwrite: true,
         });
       };
 
@@ -118,12 +119,17 @@ export function Invitation() {
            bowing out — the two run together, so the page answers the hand at
            once and the button simply folds away as the loader dissolves. */
         tl.resume();
+        /* `overwrite` matters here: an eager guest presses while the button is
+           still fading in, and without it the two tweens run side by side and
+           the longer fade-in wins — leaving the button at full opacity, saved
+           from sight only by the loader going hidden around it. */
         gsap.to(button, {
           opacity: 0,
           y: -8,
           duration: CUE.enterOutDuration,
           ease: "power2.in",
           pointerEvents: "none",
+          overwrite: true,
         });
       };
 
