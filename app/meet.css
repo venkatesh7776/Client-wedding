@@ -254,6 +254,11 @@
 
 .person__rule--top { margin: 0; }
 
+/* The siblings' label needs no spacing of its own: the arch's column already
+   sets one gap for every line in it, and a margin here would be added to that
+   gap — pushing the names further from "Sister of" than the parents sit from
+   "Daughter of", when the whole point is that the two pairs read alike. */
+
 .person__siblings {
   display: flex;
   flex-direction: column;

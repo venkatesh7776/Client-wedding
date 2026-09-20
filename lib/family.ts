@@ -12,6 +12,12 @@ export type Person = {
   name: string;
   relation: string;
   parents: [string, string];
+  /**
+   * How this person stands to their siblings — "Sister of", "Brother of". It
+   * belongs to the person, not the section: the bride and the groom cannot
+   * share one word for it.
+   */
+  siblingsRelation: string;
   /** Shown under the parents, quieter than everything above it. */
   siblings: Sibling[];
   portrait: string | null;
@@ -22,6 +28,7 @@ export const BRIDE: Person = {
   name: "Sahla Abdulla",
   relation: "Daughter of",
   parents: ["Neerotum Chalil Abdulla", "Sabira Cherukunnummal"],
+  siblingsRelation: "Sister of",
   siblings: [
     { name: "Anees Ahmed Abdulla", spouse: "Saifa Rasheed" },
     { name: "Masoomah Abdulla", spouse: "Adil Ifthikharuddin" },
@@ -34,6 +41,7 @@ export const GROOM: Person = {
   name: "Abdul Basith T.A",
   relation: "Son of",
   parents: ["Abdul Jabbar T.M", "Rasla Beevi"],
+  siblingsRelation: "Brother of",
   siblings: [
     { name: "Rizwa Fathima", spouse: "Safder Abdul Kareem" },
     { name: "Fayiz T.A" },
@@ -44,6 +52,5 @@ export const GROOM: Person = {
 export const SECTION = {
   title: "Meet the Bride & Groom",
   lede: "Two families, one beautiful beginning.",
-  siblingsLabel: "Siblings",
   spouseOf: "Spouse of",
 } as const;

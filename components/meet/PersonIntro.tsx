@@ -35,6 +35,12 @@ export function PersonIntro({ person, side }: { person: Person; side: "bride" | 
 
         <span className="person__rule" aria-hidden data-info-line />
 
+        {/* The same shape as the parentage above it: the relation names itself,
+            then the names follow. */}
+        <p className="person__relation person__relation--siblings" data-info-line>
+          {person.siblingsRelation}
+        </p>
+
         <ul className="person__siblings" data-info-line>
           {person.siblings.map((s) => (
             <li key={s.name}>
