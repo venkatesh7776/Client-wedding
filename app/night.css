@@ -16,6 +16,11 @@
   z-index: 1;
   isolation: isolate;
   overflow: clip;
+  /* The section IS the picture: 1440x1433, so `cover` fits it exactly — no
+     crop, no upscale, nothing added. The content is cut to fit this, not the
+     other way round. A phone is far too narrow to hold it, so there the
+     height goes back to the content (see the foot of this file). */
+  aspect-ratio: 1440 / 1433;
 }
 
 .night__bg {
@@ -30,4 +35,9 @@
   height: 100%;
   object-fit: cover;
   object-position: center bottom;
+}
+
+@media (max-width: 860px) {
+  /* 393 wide would mean 391 tall — nothing would fit. The content rules here. */
+  .night { aspect-ratio: auto; }
 }

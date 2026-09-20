@@ -4,6 +4,7 @@ import { Celebrations } from "@/components/celebrate/Celebrations";
 import { Closing } from "@/components/closing/Closing";
 import { Countdown } from "@/components/countdown/Countdown";
 import { Night } from "@/components/night/Night";
+import { Sparkles } from "@/components/sparkles/Sparkles";
 import { Assistance } from "@/components/contact/Assistance";
 import { DressCode } from "@/components/dress/DressCode";
 import { Lanterns } from "@/components/lanterns/Lanterns";
@@ -15,7 +16,9 @@ import { Venues } from "@/components/venues/Venues";
 export default function Page() {
   return (
     <main>
-      {/* one layer for the whole page, above every section and outside them all */}
+      {/* two layers for the whole page, above every section and outside them
+          all: the sparks carry across it and the lanterns hang over them */}
+      <Sparkles />
       <Lanterns />
       <Invitation />
       <MeetTheCouple />

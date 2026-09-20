@@ -1,0 +1,78 @@
+/* ==========================================================================
+   THE SPARKS
+   One layer for the whole page, fixed to the viewport, so the sparks belong to
+   the room rather than to any section — the same arrangement as the lanterns.
+   They travel up the screen as the invitation is read and keep shining when it
+   is still.
+
+   They take no clicks and cast no shadow on anything they pass.
+   ========================================================================== */
+
+.sparks {
+  position: fixed;
+  inset: 0;
+  z-index: 2; /* over the sections, under the lanterns at 3 */
+  pointer-events: none;
+  overflow: hidden;
+  /* they come up once the hero has finished unveiling itself, not over it */
+  opacity: 1;
+  transition: opacity 2s ease 0.8s;
+}
+
+html.is-holding .sparks {
+  opacity: 0;
+  transition: none;
+}
+
+.spark {
+  position: absolute;
+  top: 0;
+  width: var(--spark-size);
+  height: var(--spark-size);
+  margin-left: calc(var(--spark-size) / -2);
+  will-change: transform;
+}
+
+/*
+ * The point.
+ *
+ * A deep gold core inside a pale halo, and no blend modes — the layer is
+ * `position: fixed`, which makes a stacking context of its own, and a blend
+ * mode inside one has nothing behind it to blend with. It has to work on its
+ * own colours.
+ *
+ * So the core is dark: deep gold sits below the cream daylight and above the
+ * navy night, which is the only way one point can be seen at both ends of the
+ * page. The halo around it is pale, and that is what reads as light on the
+ * dark half — the core alone would just be a dot.
+ */
+.spark__point {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 246, 222, 0.95) 0%,
+    rgba(190, 139, 44, 1) 26%,
+    rgba(138, 96, 22, 1) 46%,
+    rgba(150, 110, 40, 0.7) 62%,
+    rgba(214, 178, 116, 0.3) 78%,
+    rgba(232, 200, 140, 0) 92%
+  );
+  box-shadow: 0 0 calc(var(--spark-size) * 1.5) calc(var(--spark-size) * 0.18)
+    rgba(240, 206, 140, 0.3);
+  will-change: opacity, transform;
+}
+
+/* A phone holds fewer of them, and smaller: the same count on a narrow screen
+   reads as static rather than as light. */
+@media (max-width: 860px) {
+  .spark { transform-origin: center; }
+  .spark:nth-child(2n) { display: none; }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparks { display: none; }
+}

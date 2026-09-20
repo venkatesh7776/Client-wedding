@@ -3,6 +3,7 @@ import {
   Amiri,
   Arbutus,
   Bricolage_Grotesque,
+  Alex_Brush,
   Playfair_Display,
   Instrument_Serif,
 } from "next/font/google";
@@ -19,6 +20,7 @@ import "./message.css";
 import "./contact.css";
 import "./closing.css";
 import "./lanterns.css";
+import "./sparkles.css";
 
 const instrument = Instrument_Serif({
   weight: "400",
@@ -57,6 +59,23 @@ const nameFace = Playfair_Display({
   display: "swap",
 });
 
+/**
+ * The couple's names on the first screen, and nowhere else.
+ *
+ * Alex Brush, after two scripts whose capitals would not read. Great Vibes
+ * draws its A as a round swash indistinguishable from a lowercase a, so
+ * "Abdulla" came out looking like "abdulla"; Parisienne fixed the A but its S
+ * sits low and flat and "Sahla" lost its capital instead. Alex Brush carries
+ * both — a looped S and a clear A — which is what a name set in script has to
+ * do before anything else.
+ */
+const script = Alex_Brush({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-script",
+  display: "swap",
+});
+
 /** Arabic face — Arbutus and Instrument Serif carry no Arabic glyphs. */
 const amiri = Amiri({
   weight: ["400", "700"],
@@ -81,7 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${instrument.variable} ${arbutus.variable} ${bricolage.variable} ${amiri.variable} ${nameFace.variable}`}
+      className={`${instrument.variable} ${arbutus.variable} ${bricolage.variable} ${amiri.variable} ${nameFace.variable} ${script.variable}`}
     >
       <head>
         {/* The palace has to be decoded before the ring lands at 2.8s. */}
@@ -89,7 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preload" as="image" href="/assets/images/hero-background.webp" />
         {/* Warm the track too: it has to be ready the instant the guest first
             touches the page, and by then the sections below are downloading. */}
-        <link rel="preload" as="audio" href="/assets/audio/mp3.mp3" />
+        <link rel="preload" as="audio" href="/assets/audio/a-thousand-years.mp3" />
       </head>
       <body>
         {children}
