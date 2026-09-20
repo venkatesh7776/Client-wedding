@@ -12,6 +12,9 @@ export const COPY = {
   verse: "\u201dوَخَلَقْنَاكُمْ أَزْوَاجًا\u201c",
   verseMeaning: "\u201cAnd We created you in pairs.\u201d",
   verseReference: "— Surah An-Naba (78:8)",
+
+  /** The gate. Nothing moves, and no music plays, until this is pressed. */
+  enter: "Enter Invitation",
   /** Bismillah */
   bismillah:
     "بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",

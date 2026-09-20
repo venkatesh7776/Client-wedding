@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { BGM_FADE, BGM_SRC, BGM_VOLUME } from "@/lib/audio";
+import { ENTER_EVENT } from "@/lib/music";
 
 function SpeakerIcon({ muted }: { muted: boolean }) {
   return (
@@ -28,6 +29,9 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
  * refusal costs nothing now that no single event can spend the only chance.
  */
 const GESTURES = [
+  /* The opening of the invitation, which is the press this page is built
+     around and the one that is meant to let the music in. */
+  ENTER_EVENT,
   "pointerdown", "pointerup", "mousedown", "touchend", "keydown", "click",
   "wheel", "scroll", "touchstart", "touchmove",
 ] as const;

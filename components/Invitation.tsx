@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 
 import { Hero } from "./Hero";
 import { Loader } from "./Loader";
+import { announceEntry } from "@/lib/music";
 import { preloadHero, preloadRest } from "@/lib/preload";
 import { CUE, EASE, startLampDrift } from "@/lib/timeline";
 import { useStageScale } from "@/lib/useStageScale";
@@ -23,8 +24,20 @@ gsap.registerPlugin(useGSAP);
  */
 export function Invitation() {
   const root = useRef<HTMLDivElement>(null);
+  /* What the Enter button does, decided by the branch the timeline took. Held
+     in a ref so the button can be wired before either branch has run. */
+  const enter = useRef<(() => void) | null>(null);
 
   useStageScale(root);
+
+  /* The one handler the gate hangs on. `announceEntry` goes first and goes
+     synchronously: the browser's leave to play sound belongs to this click and
+     is lost the moment anything awaits. */
+  const onEnter = () => {
+    announceEntry();
+    enter.current?.();
+    enter.current = null;   // one opening only
+  };
 
   useGSAP(
     () => {
@@ -36,8 +49,9 @@ export function Invitation() {
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         release();
-        // Land on the finished composition; no motion at all.
-        gsap.set(q("[data-loader]"), { autoAlpha: 0, display: "none" });
+        // The composition is already assembled behind the loader; no motion at
+        // all. The gate stays, since it is what the music depends on, and the
+        // loader simply disappears when it is pressed.
         gsap.set(q("[data-hero-bg]"), { opacity: 1 });
         gsap.set([q("[data-pillar]"), lamps, q("[data-reveal]"), q("[data-couple]")], {
           opacity: 1,
@@ -46,6 +60,10 @@ export function Invitation() {
           xPercent: 0,
           yPercent: 0,
         });
+        gsap.set(q("[data-enter]"), { opacity: 1, y: 0, pointerEvents: "auto" });
+        enter.current = () => {
+          gsap.set(q("[data-loader]"), { autoAlpha: 0, display: "none" });
+        };
         return;
       }
 
@@ -62,19 +80,52 @@ export function Invitation() {
          front of a finished loading screen while the footer downloaded. */
       let imagesReady = false;
       let waiting = false;
-      const openWhenReady = () => {
-        if (imagesReady && waiting) tl.resume();
+      let entered = false;
+
+      const button = q("[data-enter]");
+
+      /* The button appears only when both are true: the verse has finished
+         filling and the first screen has arrived. So it showing up means the
+         invitation really is ready to open, and the press that follows never
+         lands on a blank wait. */
+      const offerEntry = () => {
+        if (!imagesReady || !waiting || entered) return;
+        gsap.to(button, {
+          opacity: 1,
+          y: 0,
+          duration: CUE.enterInDuration,
+          ease: EASE.settle,
+          pointerEvents: "auto",
+        });
       };
 
       preloadHero().then(() => {
         imagesReady = true;
-        openWhenReady();
+        offerEntry();
       });
 
       tl.addPause(CUE.loaderOut - 0.05, () => {
         waiting = true;
-        openWhenReady();
+        offerEntry();
       });
+
+      /* And this is the opening itself. A standalone tween, not a step in the
+         timeline: the timeline is parked at the pause, and anything added to it
+         would be parked too. */
+      enter.current = () => {
+        entered = true;
+        /* The reveal starts on the press, not after the button has finished
+           bowing out — the two run together, so the page answers the hand at
+           once and the button simply folds away as the loader dissolves. */
+        tl.resume();
+        gsap.to(button, {
+          opacity: 0,
+          y: -8,
+          duration: CUE.enterOutDuration,
+          ease: "power2.in",
+          pointerEvents: "none",
+        });
+      };
 
       /* ---- The verse and its translation arrive first ---- */
       tl.fromTo(
@@ -252,7 +303,7 @@ export function Invitation() {
   return (
     <div className="page" ref={root}>
       <Hero />
-      <Loader />
+      <Loader onEnter={onEnter} />
     </div>
   );
 }

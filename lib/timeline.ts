@@ -16,6 +16,11 @@ export const CUE = {
   verseFillDuration: 2.2,
 
   /** The loader lifts away and the palace is simply there behind it. */
+  /** The gate fading in once the verse is full and the first screen is ready. */
+  enterInDuration: 0.7,
+  /** And out again, under the guest's hand, as the invitation opens. */
+  enterOutDuration: 0.35,
+
   loaderOut: 3.8,
   loaderOutDuration: 1.2,
 

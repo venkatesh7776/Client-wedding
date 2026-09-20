@@ -10,8 +10,14 @@ import { COPY } from "@/lib/copy";
  * It is set in Amiri — a classical naskh cut for Qur'anic typesetting, so the
  * tashkeel sit properly — rather than the flattened outlines it used to be.
  * As live text it also costs nothing to fetch.
+ *
+ * Nothing proceeds on its own: the verse fills as the first screen loads, and
+ * then the guest is asked to open the invitation. That press is what lets the
+ * music in — a browser grants a page leave to make sound on a gesture and on
+ * nothing else — so the gate is not a formality, it is the thing that makes
+ * the music possible at all.
  */
-export function Loader() {
+export function Loader({ onEnter }: { onEnter: () => void }) {
   return (
     <div className="loader" data-loader>
       <img className="loader__bg" src={ASSETS.loaderBackground} alt="" aria-hidden />
@@ -27,6 +33,11 @@ export function Loader() {
 
         <p className="loader__meaning" data-loader-line>{COPY.verseMeaning}</p>
         <p className="loader__reference" data-loader-line>{COPY.verseReference}</p>
+
+        {/* Hidden until the first screen is ready; the timeline reveals it. */}
+        <button type="button" className="enter" data-enter onClick={onEnter}>
+          <span className="enter__label">{COPY.enter}</span>
+        </button>
       </div>
     </div>
   );
