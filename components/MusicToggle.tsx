@@ -21,17 +21,30 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
   );
 }
 
-/** Events any browser accepts as "the visitor is here", and so as leave to play. */
-const GESTURES = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"] as const;
+/**
+ * What Chrome actually counts as the visitor being here. Scrolling is *not* on
+ * the list — the spec grants a page leave to make noise on a press, a tap or a
+ * key, and nothing else — so a guest who only ever spins the trackpad would sit
+ * in silence if these were all we waited for.
+ */
+const ACTIVATING = ["pointerdown", "pointerup", "mousedown", "touchend", "keydown", "click"] as const;
+
+/**
+ * Tried as well, since a browser that already trusts the site will take them,
+ * and a scroll is the first thing most guests do. A refusal here costs nothing.
+ */
+const OPPORTUNISTIC = ["wheel", "scroll", "touchstart", "touchmove"] as const;
+
+const GESTURES = [...ACTIVATING, ...OPPORTUNISTIC];
 
 /**
  * The music control, bottom right.
  *
  * It starts on: the track begins with the page and the icon says so. Browsers
  * block unprompted sound, so when the first attempt is refused the control
- * stays lit and the music starts on the visitor's first touch, scroll or key —
- * the loader gives way to a scroll, so that is usually a moment away. Turning
- * it off cancels the wait. The volume eases rather than snapping, and the
+ * stays lit and the music starts the moment the visitor first presses, taps or
+ * types — scrolling does not count, whatever it may look like. Turning it off
+ * cancels the wait. The volume eases rather than snapping, and the
  * button removes itself if the track is missing.
  */
 export function MusicToggle() {
@@ -74,19 +87,26 @@ export function MusicToggle() {
     }
   };
 
-  /* On by default — play at once, and if the browser says no, on the first
-     gesture instead. `cancelled` is what the off switch trips. */
+  /* On by default: play at once, and when Chrome refuses, keep listening and
+     try again on every gesture until one is accepted. The listeners come off
+     only once sound is actually coming out — an earlier version dropped them
+     on the first event it saw, which the opening's own scroll would eat, and
+     then nothing was left to start the music at all. */
   useEffect(() => {
     let live = true;
+    let trying = false;
 
-    const onGesture = () => {
-      disarm();
-      if (!live || !wanted.current) return;
-      void start();
+    const attempt = () => {
+      if (!live || trying || !wanted.current) return;
+      trying = true;
+      void start().then((ok) => {
+        trying = false;
+        if (ok) disarm();
+      });
     };
     const arm = () =>
-      GESTURES.forEach((e) => window.addEventListener(e, onGesture, { passive: true }));
-    const disarm = () => GESTURES.forEach((e) => window.removeEventListener(e, onGesture));
+      GESTURES.forEach((e) => window.addEventListener(e, attempt, { passive: true }));
+    const disarm = () => GESTURES.forEach((e) => window.removeEventListener(e, attempt));
 
     void start().then((ok) => {
       if (!ok && live) arm();

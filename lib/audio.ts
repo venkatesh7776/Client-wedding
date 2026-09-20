@@ -10,5 +10,9 @@ export const BGM_SRC = "/assets/audio/mp3.mp3";
 /** Kept low on purpose: this sits under the page, it does not lead it. */
 export const BGM_VOLUME = 0.32;
 
-/** Seconds spent easing the volume up or down, so it never snaps on. */
-export const BGM_FADE = 1.2;
+/**
+ * Seconds spent easing the volume up or down, so it never snaps on. Short
+ * enough that the track is audible as soon as it starts: a long ramp reads as
+ * the music being late rather than as a fade.
+ */
+export const BGM_FADE = 0.7;

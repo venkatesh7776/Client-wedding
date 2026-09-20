@@ -85,6 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* The palace has to be decoded before the ring lands at 2.8s. */}
         <link rel="preload" as="image" href="/assets/images/new%20loader%20bg.webp" />
         <link rel="preload" as="image" href="/assets/images/hero-background.webp" />
+        {/* Warm the track too: it has to be ready the instant the guest first
+            touches the page, and by then the sections below are downloading. */}
+        <link rel="preload" as="audio" href="/assets/audio/mp3.mp3" />
       </head>
       <body>
         {children}
