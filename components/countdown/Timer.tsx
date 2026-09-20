@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { COUNTDOWN_COPY, NIKKAH_AT } from "@/lib/venues";
+import { COUNTDOWN_COPY, NIKKAH_AT } from "@/lib/countdown";
 
 type Parts = [number, number, number, number];
 
@@ -16,12 +16,12 @@ function remaining(target: number): Parts {
 }
 
 /**
- * Live countdown to the Nikkah.
+ * The ticking clock itself — the widget, not the section around it.
  *
  * Renders zeroes on the server and on the first client paint — identical
  * markup either side, so hydration stays quiet — then starts ticking.
  */
-export function Countdown() {
+export function Timer() {
   const target = new Date(NIKKAH_AT).getTime();
   const [parts, setParts] = useState<Parts>(ZERO);
   const [started, setStarted] = useState(false);
@@ -44,7 +44,7 @@ export function Countdown() {
         <span className="countdown__corner countdown__corner--br" aria-hidden />
 
         <p className="countdown__title">
-          {over ? COUNTDOWN_COPY.passed : `${COUNTDOWN_COPY.title}:`}
+          {over ? COUNTDOWN_COPY.passed : `${COUNTDOWN_COPY.widgetTitle}:`}
         </p>
 
         {!over && (

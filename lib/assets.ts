@@ -15,6 +15,12 @@ export const ASSETS = {
   pillarMobile: "/assets/images/pillar-mobile.webp",
   /** Venues & Directions backdrop — 2880x2428, i.e. exactly 2x the 1440x1214 stage */
   venueBackground: "/assets/images/VENUE%20BG%20copy.png",
+  /**
+   * Countdown backdrop — 2880x1680 night skyline, the sibling of the venues
+   * artwork. WebP: the PNG it came from is 3.8MB and this is 107KB, which
+   * matters for a picture nobody waits on but everybody downloads.
+   */
+  countdownBackground: "/assets/images/countdown-bg.webp",
   /** Loader backdrop — 1665x944 WebP (spaces escaped for the URL) */
   loaderBackground: "/assets/images/new%20loader%20bg.webp",
   /** Closing section backdrop — 2880x1554 palace terrace at sunrise (space escaped) */

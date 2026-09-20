@@ -12,7 +12,6 @@ import { EASE, EASE_LINE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
 
 import { Ornament } from "../meet/Ornament";
 import { VENUE_ARCH } from "./arch";
-import { Countdown } from "./Countdown";
 import { VenueCard } from "./VenueCard";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -50,7 +49,6 @@ export function Venues() {
       gsap.set(q("[data-venue]"), { opacity: 0, y: REVEAL.rise + 8 });
       gsap.set(q("[data-venue-divider]"), { opacity: 0, scaleX: 0.4 });
       gsap.set(q("[data-venue-cta]"), { opacity: 0, y: 12 });
-      gsap.set(q("[data-countdown]"), { opacity: 0, y: 20 });
 
       /* the backdrop washes in first, behind everything */
       onEnter(root.current ?? undefined, "top 75%")
@@ -77,9 +75,6 @@ export function Venues() {
             opacity: 1, y: 0, duration: REVEAL.line, ease: EASE,
           }, 0.35);
       });
-
-      onEnter(q("[data-countdown]")[0], "top 88%")
-        .to(q("[data-countdown]"), { opacity: 1, y: 0, duration: REVEAL.frame, ease: EASE }, 0);
     },
     { scope: root },
   );
@@ -114,7 +109,6 @@ export function Venues() {
         ))}
       </div>
 
-      <Countdown />
     </section>
   );
 }

@@ -2,6 +2,7 @@ import { Invitation } from "@/components/Invitation";
 import { MusicToggle } from "@/components/MusicToggle";
 import { Celebrations } from "@/components/celebrate/Celebrations";
 import { Closing } from "@/components/closing/Closing";
+import { Countdown } from "@/components/countdown/Countdown";
 import { Assistance } from "@/components/contact/Assistance";
 import { DressCode } from "@/components/dress/DressCode";
 import { Lanterns } from "@/components/lanterns/Lanterns";
@@ -19,6 +20,7 @@ export default function Page() {
       <MeetTheCouple />
       <Celebrations />
       <Venues />
+      <Countdown />
       <Rsvp />
       <DressCode />
       <LeaveMessage />

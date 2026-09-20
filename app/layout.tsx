@@ -11,6 +11,7 @@ import "./globals.css";
 import "./meet.css";
 import "./celebrate.css";
 import "./venues.css";
+import "./countdown.css";
 import "./dress.css";
 import "./rsvp.css";
 import "./message.css";
