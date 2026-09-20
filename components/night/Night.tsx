@@ -49,7 +49,6 @@ export function Night({ children }: { children: ReactNode }) {
           height={1433}
           alt=""
         />
-        <span className="night__scrim" />
       </div>
 
       {children}
