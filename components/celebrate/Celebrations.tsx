@@ -115,10 +115,22 @@ export function Celebrations() {
 
       walkTheRail();
 
+      /* The cards carry pictures, and a picture that arrives late changes the
+         height the pin was measured against. The <img>s now reserve their own
+         space, so this is a second line of defence rather than the fix — but
+         fonts and the backdrop settle late too, and a stale pin height is what
+         drops the last card onto the closing words. */
+      const settle = () => ScrollTrigger.refresh();
+      window.addEventListener("load", settle);
+      if (document.fonts?.ready) void document.fonts.ready.then(settle);
+
       onEnter(q("[data-closing]")[0], "top 85%")
         .to(closing, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: 0.18 }, 0);
 
-      return () => unpin?.();
+      return () => {
+        window.removeEventListener("load", settle);
+        unpin?.();
+      };
     },
     { scope: root },
   );

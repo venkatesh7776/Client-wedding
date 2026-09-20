@@ -380,7 +380,10 @@
   flex-direction: column;
   align-items: center;
   max-width: 660px;
-  margin: clamp(64px, 7vw, 104px) auto 0;
+  /* 7vw is a fine gap on a wide screen and far too tight on a phone, where it
+     bottoms out at the minimum — so the floor is set from the card, not from
+     the viewport. */
+  margin: clamp(88px, 7vw, 104px) auto 0;
   text-align: center;
   color: var(--color-gold);
 }

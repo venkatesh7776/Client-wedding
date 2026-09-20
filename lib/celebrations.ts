@@ -14,6 +14,13 @@ export type Celebration = {
   venue: string;
   /** Which icon heads the card. */
   icon: string;
+  /**
+   * The illustration's real pixel size. Given to the <img> so the browser can
+   * hold its place before it arrives: without it the card grows when the
+   * picture lands, and it grows after the rail has already been measured and
+   * pinned — which left the last card sitting on top of the closing words.
+   */
+  iconSize: { width: number; height: number };
 };
 
 /** The reception venue is kept in one place — Section 4 owns it. */
@@ -27,6 +34,7 @@ export const CELEBRATIONS: Celebration[] = [
     time: "7:00 PM – 10:00 PM",
     venue: "Bride’s Residence",
     icon: "/assets/images/celebration-mehandi.png",
+    iconSize: { width: 360, height: 337 },
   },
   {
     index: "02",
@@ -36,6 +44,7 @@ export const CELEBRATIONS: Celebration[] = [
     note: "Nikkah at 12:30 PM",
     venue: "Nexstay Hotel Calicut Gate",
     icon: "/assets/images/celebration-nikkah.png",
+    iconSize: { width: 360, height: 305 },
   },
   {
     index: "03",
@@ -44,6 +53,7 @@ export const CELEBRATIONS: Celebration[] = [
     time: "12:00 PM – 6:00 PM",
     venue: RECEPTION?.name ?? "Venue details to be added",
     icon: "/assets/images/celebration-reception.png",
+    iconSize: { width: 360, height: 318 },
   },
 ];
 
