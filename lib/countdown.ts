@@ -15,8 +15,6 @@ export const COUNTDOWN_COPY = {
   lede:
     "Every tick of the clock brings us closer to a lifetime of love, laughter, " +
     "and endless blessings, in sha Allah.",
-  /** The line above the digits themselves. */
-  widgetTitle: "Nikkah starts in",
   units: ["Days", "Hours", "Minutes", "Seconds"] as const,
   passed: "The Nikkah has begun",
 } as const;

@@ -41,25 +41,20 @@
 
 /* ---------- The invitation ---------- */
 
-.rsvp__eyebrow {
+/* One word where the couple's names used to be. Four letters carry none of
+   the width a pair of names did, so the tracking is opened up to give it some
+   presence rather than leaving it stranded in the middle of the line. */
+.rsvp__title {
   margin: 0;
-  font-family: var(--font-ui);
-  font-variation-settings: "opsz" 14, "wdth" 100;
-  font-size: clamp(10px, 0.95vw, 12.5px);
-  font-weight: 500;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--color-gold-deep);
-}
-
-.rsvp__names {
-  margin: clamp(12px, 1.4vw, 18px) 0 0;
   font-family: var(--font-names);
   font-style: normal;
   font-weight: 400;
-  font-size: clamp(29px, 3.9vw, 54px);
+  font-size: clamp(34px, 4.4vw, 60px);
   line-height: 1.06;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.14em;
+  /* the tracking is added to the right of the last letter too; pull it back
+     so the word still sits on the centre line */
+  text-indent: 0.14em;
   color: var(--color-ink);
   text-shadow: 1.5px 1.5px 0 var(--color-ink-shadow);
 }

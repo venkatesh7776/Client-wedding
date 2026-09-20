@@ -3,6 +3,7 @@ import { MusicToggle } from "@/components/MusicToggle";
 import { Celebrations } from "@/components/celebrate/Celebrations";
 import { Closing } from "@/components/closing/Closing";
 import { Countdown } from "@/components/countdown/Countdown";
+import { Night } from "@/components/night/Night";
 import { Assistance } from "@/components/contact/Assistance";
 import { DressCode } from "@/components/dress/DressCode";
 import { Lanterns } from "@/components/lanterns/Lanterns";
@@ -19,8 +20,12 @@ export default function Page() {
       <Invitation />
       <MeetTheCouple />
       <Celebrations />
-      <Venues />
-      <Countdown />
+      {/* one picture behind both: the venue cards sit under its sky, the
+          clock above its skyline */}
+      <Night>
+        <Venues />
+        <Countdown />
+      </Night>
       <Rsvp />
       <DressCode />
       <LeaveMessage />

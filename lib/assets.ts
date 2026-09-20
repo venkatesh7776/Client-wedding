@@ -16,11 +16,11 @@ export const ASSETS = {
   /** Venues & Directions backdrop — 2880x2428, i.e. exactly 2x the 1440x1214 stage */
   venueBackground: "/assets/images/VENUE%20BG%20copy.png",
   /**
-   * Countdown backdrop — 2880x1680 night skyline, the sibling of the venues
-   * artwork. WebP: the PNG it came from is 3.8MB and this is 107KB, which
-   * matters for a picture nobody waits on but everybody downloads.
+   * The night behind Venues & Directions and the Countdown together — 2880x3226,
+   * tall enough to carry both. WebP: the PNG it came from is 4.4MB and this is
+   * 119KB, which matters for a picture nobody waits on but everybody downloads.
    */
-  countdownBackground: "/assets/images/countdown-bg.webp",
+  nightBackground: "/assets/images/night.webp",
   /** Loader backdrop — 1665x944 WebP (spaces escaped for the URL) */
   loaderBackground: "/assets/images/new%20loader%20bg.webp",
   /** Closing section backdrop — 2880x1554 palace terrace at sunrise (space escaped) */

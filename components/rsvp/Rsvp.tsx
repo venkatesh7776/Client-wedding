@@ -50,12 +50,8 @@ export function Rsvp() {
         <img className="rsvp__sceneImg" loading="lazy" decoding="async" src={ASSETS.rsvpScene} alt="" />
       </div>
 
-      <p className="rsvp__eyebrow" data-rsvp-line>
-        {RSVP_COPY.eyebrow}
-      </p>
-
-      <h2 className="rsvp__names" id="rsvp-title" data-rsvp-line>
-        {RSVP_COPY.names}
+      <h2 className="rsvp__title" id="rsvp-title" data-rsvp-line>
+        {RSVP_COPY.title}
       </h2>
 
       <p className="rsvp__body" data-rsvp-line>

@@ -13,53 +13,20 @@
 
   position: relative;
   z-index: 1;
-  isolation: isolate;
-  overflow: clip;
-  /* The artwork is 2880x2428 — exactly twice the 1440x1214 stage it was drawn
-     for — so the section holds that height and the picture fills it uncropped. */
-  height: 1214px;
+  /* No backdrop and no isolation of its own: `.night` holds the picture that
+     runs behind this section and the countdown alike, and an isolated stacking
+     context here would cut this section off from it. The height follows the
+     cards now rather than an artwork this section no longer owns. */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: clamp(56px, 6vw, 92px) clamp(20px, 4vw, 56px) clamp(24px, 3vw, 44px);
-  background: var(--navy-deep);
+  padding: clamp(56px, 6vw, 92px) clamp(20px, 4vw, 56px) clamp(40px, 5vw, 72px);
   color: var(--cream);
 }
 
 /* ---------- Wall ---------- */
 
 .venues__defs { position: absolute; width: 0; height: 0; }
-
-.venues__bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.venues__bgImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* The artwork already keeps its centre clear, so this only softens the top and
-   bottom edges into the neighbouring sections and lifts contrast behind the
-   panels a touch. The jasmine corners stay visible. */
-.venues__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    /* keeps the centre calm without hiding the skyline along the foot */
-    radial-gradient(56% 40% at 50% 44%, rgba(0, 36, 58, 0.5), transparent 74%),
-    linear-gradient(
-      to bottom,
-      var(--navy-deep) 0,
-      rgba(0, 36, 58, 0) 14%,
-      rgba(0, 36, 58, 0) 88%,
-      var(--navy-deep) 100%
-    );
-}
 
 /* ---------- Heading ---------- */
 
@@ -264,8 +231,7 @@
 
 @media (max-width: 860px) {
   .venues {
-    height: auto;
-    padding: clamp(72px, 12vw, 110px) 8px clamp(80px, 13vw, 120px);
+    padding: clamp(72px, 12vw, 110px) 8px clamp(48px, 9vw, 80px);
   }
 
   .venues__grid {

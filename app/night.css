@@ -1,0 +1,53 @@
+/* ==========================================================================
+   THE NIGHT
+
+   Venues & Directions and the Countdown are one scene, not two. This wrapper
+   holds the single picture that runs behind them both — lattice sky at the
+   head, open water through the middle, the skyline arriving at the foot — so
+   the guest scrolls down through it rather than across a seam between two
+   crops of the same artwork.
+
+   Neither section inside may set a background or an isolated stacking context
+   of its own; both would cut it off from this.
+   ========================================================================== */
+
+.night {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: clip;
+  /* sampled from the artwork, so the edges meet the sections either side */
+  background: #002239;
+}
+
+.night__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.night__bgImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The skyline is painted along the bottom edge of the picture and is the
+     floor the clock stands on, so it is the bottom that must be held when the
+     crop has to give somewhere. */
+  object-position: center bottom;
+}
+
+/* Feathers the top and bottom into the neighbouring sections and lifts the
+   type off the lattice. The domes and the water stay visible. */
+.night__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(64% 30% at 50% 22%, rgba(0, 36, 58, 0.52), transparent 76%),
+    linear-gradient(
+      to bottom,
+      #002239 0,
+      rgba(0, 36, 58, 0) 10%,
+      rgba(0, 36, 58, 0) 92%,
+      #002239 100%
+    );
+}

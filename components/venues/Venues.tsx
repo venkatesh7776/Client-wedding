@@ -5,7 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-import { ASSETS } from "@/lib/assets";
 import { VENUES, VENUE_COPY } from "@/lib/venues";
 
 import { EASE, EASE_LINE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
@@ -42,17 +41,12 @@ export function Venues() {
       const rules = q("[data-ornament-rule]");
       const stars = q("[data-ornament-star]");
 
-      gsap.set(q("[data-venues-bg]"), { opacity: 0 });
       gsap.set(head, { opacity: 0, y: 26 });
       gsap.set(rules, { opacity: 0, scaleX: 0 });
       gsap.set(stars, { opacity: 0 });
       gsap.set(q("[data-venue]"), { opacity: 0, y: REVEAL.rise + 8 });
       gsap.set(q("[data-venue-divider]"), { opacity: 0, scaleX: 0.4 });
       gsap.set(q("[data-venue-cta]"), { opacity: 0, y: 12 });
-
-      /* the backdrop washes in first, behind everything */
-      onEnter(root.current ?? undefined, "top 75%")
-        .to(q("[data-venues-bg]"), { opacity: 1, duration: REVEAL.wash, ease: "power1.out" }, 0);
 
       onEnter(q("[data-venues-head]")[0], "top 85%")
         .to(head, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0)
@@ -89,11 +83,6 @@ export function Venues() {
           </clipPath>
         </defs>
       </svg>
-
-      <div className="venues__bg" data-venues-bg aria-hidden>
-        <img className="venues__bgImg" loading="lazy" decoding="async" src={ASSETS.venueBackground} alt="" />
-        <span className="venues__scrim" />
-      </div>
 
       <header className="venues__head" data-venues-head>
         <p className="venues__lede">{VENUE_COPY.lede}</p>

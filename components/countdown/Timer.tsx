@@ -43,9 +43,10 @@ export function Timer() {
         <span className="countdown__corner countdown__corner--bl" aria-hidden />
         <span className="countdown__corner countdown__corner--br" aria-hidden />
 
-        <p className="countdown__title">
-          {over ? COUNTDOWN_COPY.passed : `${COUNTDOWN_COPY.widgetTitle}:`}
-        </p>
+        {/* The heading above the frame already says what is being counted, so
+            the digits are left to speak for themselves. The line returns only
+            once the count is done and there is something else to say. */}
+        {over && <p className="countdown__title">{COUNTDOWN_COPY.passed}</p>}
 
         {!over && (
           <ol className="countdown__units">

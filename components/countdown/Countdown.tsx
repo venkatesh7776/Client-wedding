@@ -5,7 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-import { ASSETS } from "@/lib/assets";
 import { COUNTDOWN_COPY } from "@/lib/countdown";
 import { EASE, REVEAL, onEnter, reducedMotion } from "@/lib/reveal";
 
@@ -37,15 +36,10 @@ export function Countdown() {
 
       const head = q("[data-countdown-head] > *:not([data-ornament])");
 
-      gsap.set(q("[data-countdown-bg]"), { opacity: 0 });
       gsap.set(head, { opacity: 0, y: 26 });
       gsap.set(q("[data-ornament-rule]"), { opacity: 0, scaleX: 0 });
       gsap.set(q("[data-ornament-star]"), { opacity: 0 });
       gsap.set(q("[data-countdown]"), { opacity: 0, y: 20 });
-
-      /* the night washes in first, behind everything */
-      onEnter(root.current ?? undefined, "top 78%")
-        .to(q("[data-countdown-bg]"), { opacity: 1, duration: REVEAL.wash, ease: "power1.out" }, 0);
 
       onEnter(q("[data-countdown-head]")[0], "top 85%")
         .to(head, { opacity: 1, y: 0, duration: REVEAL.line, ease: EASE, stagger: REVEAL.stagger }, 0)
@@ -60,19 +54,6 @@ export function Countdown() {
 
   return (
     <section className="count" ref={root} aria-labelledby="count-title">
-      <div className="count__bg" data-countdown-bg aria-hidden>
-        <img
-          className="count__bgImg"
-          loading="lazy"
-          decoding="async"
-          src={ASSETS.countdownBackground}
-          width={2880}
-          height={1680}
-          alt=""
-        />
-        <span className="count__scrim" />
-      </div>
-
       <div className="count__inner">
         <header className="count__head" data-countdown-head>
           <h2 className="count__title" id="count-title">

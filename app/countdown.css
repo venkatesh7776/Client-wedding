@@ -1,14 +1,14 @@
 /* ==========================================================================
    SECTION 5 — COUNTING DOWN TO THE SACRED UNION
 
-   The clock's own night. Everything here lives inside the artwork: the
-   section takes its height from the picture's proportions rather than from
-   its contents, so the words and the clock fall in the clear field above the
-   skyline and nothing spills past the edges of the image.
+   The clock has no backdrop of its own. `.night` carries one picture behind
+   this section and the venues above it, and everything here is placed against
+   that: the words in the open water through the middle, the clock stopping
+   short of the skyline that arrives at the foot.
    ========================================================================== */
 
 .count {
-  /* sampled from the artwork, so the edges meet the neighbouring sections */
+  /* sampled from the artwork, so the type sits on the right colours */
   --navy-deep: #002239;
   --cream: #f5efe3;
   --gold-muted: #b89a61;
@@ -16,44 +16,9 @@
 
   position: relative;
   z-index: 1;
-  isolation: isolate;
-  overflow: clip;
-  display: grid;
-  /* The artwork is 2880x1680 — the section holds that shape, so the picture
-     fills it without being cropped or letterboxed at any width. */
-  aspect-ratio: 2880 / 1680;
-  /* but never so short that the words have nowhere to go on a wide monitor */
-  min-height: clamp(560px, 46vw, 760px);
-  background: var(--navy-deep);
-}
-
-.count__bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.count__bgImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center bottom; /* the skyline stays on the floor */
-}
-
-/* Lifts the words off the lattice and feathers the top and bottom edges into
-   the sections either side. The domes and the water stay visible. */
-.count__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(60% 46% at 50% 38%, rgba(0, 34, 57, 0.58), transparent 76%),
-    linear-gradient(
-      to bottom,
-      var(--navy-deep) 0,
-      rgba(0, 36, 58, 0) 15%,
-      rgba(0, 36, 58, 0) 86%,
-      var(--navy-deep) 100%
-    );
+  /* No backdrop of its own: `.night` carries the picture that runs behind the
+     venues and this section together, and the skyline at the foot of that one
+     picture is the floor this clock stands on. */
 }
 
 /* The content sits in the upper field, above where the domes begin. */
@@ -64,9 +29,12 @@
   justify-content: center;
   width: min(100%, 940px);
   margin: 0 auto;
-  padding: clamp(40px, 5vw, 72px) clamp(20px, 4vw, 56px) 0;
-  /* the skyline occupies the lowest third of the artwork; stop short of it */
-  padding-bottom: 24%;
+  /* The foot is deep because the skyline lives down there, in the shared
+     picture: the clock stops short of the domes rather than standing on them.
+     The picture is never cropped vertically — the box is always taller than
+     its 2880x3226 — so the skyline is reliably the bottom fifth of the night,
+     and room left here is what keeps the clock clear of it. */
+  padding: clamp(24px, 3.4vw, 56px) clamp(20px, 4vw, 56px) clamp(230px, 30vw, 450px);
 }
 
 .count__head {
@@ -186,21 +154,11 @@
 /* ---------- Mobile ---------- */
 
 @media (max-width: 860px) {
-  /* A phone is far taller than the artwork is, so the picture's shape stops
-     being a useful height: it would leave the words in a letterbox. The
-     section grows to fit them instead, and the backdrop covers behind. */
-  .count {
-    aspect-ratio: auto;
-    min-height: 0;
-    /* The foot is deep on purpose. The artwork is half again as wide as it is
-       tall, so in a narrow box `cover` crops it hard and the domes end up
-       squeezed behind the clock. The extra room below gives the skyline a
-       band of its own to stand in, as it has on a wide screen. */
-    padding: clamp(64px, 12vw, 96px) 20px clamp(132px, 30vw, 200px);
+  /* The same reckoning, and a far deeper foot: a phone's night is taller, so
+     the fifth of it the skyline takes is taller too. */
+  .count__inner {
+    padding: clamp(16px, 4vw, 32px) 20px clamp(360px, 60vh, 560px);
   }
-
-  .count__inner { padding: 0; }
-  .count__bgImg { object-position: center bottom; }
 
   .count__title { font-size: clamp(24px, 6.6vw, 34px); }
   .count__lede { font-size: clamp(13px, 3.6vw, 16px); }
