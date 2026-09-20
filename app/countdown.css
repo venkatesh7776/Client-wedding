@@ -29,12 +29,12 @@
   justify-content: center;
   width: min(100%, 940px);
   margin: 0 auto;
-  /* The foot is deep because the skyline lives down there, in the shared
-     picture: the clock stops short of the domes rather than standing on them.
-     The picture is never cropped vertically — the box is always taller than
-     its 2880x3226 — so the skyline is reliably the bottom fifth of the night,
-     and room left here is what keeps the clock clear of it. */
-  padding: clamp(48px, 6vw, 104px) clamp(20px, 4vw, 56px) clamp(260px, 36.6vw, 530px);
+  /* The foot clears the skyline, which lives in the shared picture below.
+     Now that the picture is laid in at its own size, its height is simply the
+     width times 1433/1440, and the skyline is the bottom 22% of that — so the
+     room needed here is 21.9% of the width, whatever the width, plus a little
+     air. No clamp can express that; the arithmetic can. */
+  padding: clamp(48px, 6vw, 104px) clamp(20px, 4vw, 56px) calc(21.9vw + 72px);
 }
 
 .count__head {
@@ -157,7 +157,7 @@
   /* The same reckoning, and a far deeper foot: a phone's night is taller, so
      the fifth of it the skyline takes is taller too. */
   .count__inner {
-    padding: clamp(36px, 9vw, 72px) 20px clamp(380px, 66vh, 620px);
+    padding: clamp(36px, 9vw, 72px) 20px calc(21.9vw + 62px);
   }
 
   .count__title { font-size: clamp(24px, 6.6vw, 34px); }

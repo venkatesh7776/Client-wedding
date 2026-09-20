@@ -26,14 +26,27 @@
   z-index: -1;
 }
 
+/*
+ * The picture is laid in at its own size — 1440x1433, and the same ratio at
+ * every width — rather than stretched to fill the night.
+ *
+ * It used to be `cover`, which had to scale the artwork to 1.45x to reach the
+ * foot of a 2072px section and cropped a third of its width away to do it:
+ * the lattice and the domes came out enlarged. Now the width rules, the height
+ * follows the artwork, and it is pinned to the bottom, because the skyline
+ * along its lower edge is the floor the clock stands on.
+ *
+ * Above its top edge is open navy, and the mask dissolves that edge into it so
+ * the lattice emerges rather than starting at a line.
+ */
 .night__bgImg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* The skyline is painted along the bottom edge of the picture and is the
-     floor the clock stands on, so it is the bottom that must be held when the
-     crop has to give somewhere. */
-  object-position: center bottom;
+  height: auto;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
 }
 
 /* Feathers the top and bottom into the neighbouring sections and lifts the
