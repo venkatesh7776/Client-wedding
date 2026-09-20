@@ -34,7 +34,7 @@
      The picture is never cropped vertically — the box is always taller than
      its 2880x3226 — so the skyline is reliably the bottom fifth of the night,
      and room left here is what keeps the clock clear of it. */
-  padding: clamp(24px, 3.4vw, 56px) clamp(20px, 4vw, 56px) clamp(230px, 30vw, 450px);
+  padding: clamp(48px, 6vw, 104px) clamp(20px, 4vw, 56px) clamp(260px, 36.6vw, 530px);
 }
 
 .count__head {
@@ -157,7 +157,7 @@
   /* The same reckoning, and a far deeper foot: a phone's night is taller, so
      the fifth of it the skyline takes is taller too. */
   .count__inner {
-    padding: clamp(16px, 4vw, 32px) 20px clamp(360px, 60vh, 560px);
+    padding: clamp(36px, 9vw, 72px) 20px clamp(380px, 66vh, 620px);
   }
 
   .count__title { font-size: clamp(24px, 6.6vw, 34px); }

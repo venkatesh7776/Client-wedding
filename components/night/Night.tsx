@@ -44,8 +44,9 @@ export function Night({ children }: { children: ReactNode }) {
           loading="lazy"
           decoding="async"
           src={ASSETS.nightBackground}
-          width={2880}
-          height={3226}
+          /* the stage it was drawn for; the file is twice this in each direction */
+          width={1440}
+          height={1433}
           alt=""
         />
         <span className="night__scrim" />
