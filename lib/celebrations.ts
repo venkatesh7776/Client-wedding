@@ -41,7 +41,7 @@ export const CELEBRATIONS: Celebration[] = [
     title: "Nikkah Ceremony",
     date: "November 8, 2026",
     time: "11:00 AM – 4:00 PM",
-    note: "Nikkah at 12:30 PM",
+    note: "Nikkah at 11:30 AM",
     venue: "Nexstay Hotel Calicut Gate",
     icon: "/assets/images/celebration-nikkah.png",
     iconSize: { width: 360, height: 305 },

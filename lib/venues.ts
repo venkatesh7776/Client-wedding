@@ -32,7 +32,7 @@ export const VENUES: Venue[] = [
     name: "Nexstay Hotel Calicut Gate",
     address: ["Near Bus Stand, Ramanattukara,", "Kozhikode, Kerala 673633"],
     mapUrl: "https://maps.app.goo.gl/sbCLK8j51eXAPcmb9",
-    when: "November 8, 2026 · Nikkah at 12:30 PM",
+    when: "November 8, 2026 · Nikkah at 11:30 AM",
     primary: true,
   },
   {

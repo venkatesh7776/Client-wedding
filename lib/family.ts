@@ -44,7 +44,7 @@ export const GROOM: Person = {
   siblingsRelation: "Brother of",
   siblings: [
     { name: "Rizwa Fathima", spouse: "Safder Abdul Kareem" },
-    { name: "Fayiz T.A" },
+    { name: "Fayiza T.A" },
   ],
   portrait: "/assets/images/GROOM.png",
 };

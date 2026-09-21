@@ -4,11 +4,11 @@
  */
 
 /**
- * When the Nikkah begins — November 8, 2026 at 12:30 PM in Kozhikode.
+ * When the Nikkah begins — November 8, 2026 at 11:30 AM in Kozhikode.
  * The offset is India Standard Time, so the countdown is correct for a guest
  * in any timezone rather than only for someone sitting in Kerala.
  */
-export const NIKKAH_AT = "2026-11-08T12:30:00+05:30";
+export const NIKKAH_AT = "2026-11-08T11:30:00+05:30";
 
 export const COUNTDOWN_COPY = {
   title: "Counting Down to the Sacred Union",
